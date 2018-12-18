@@ -14,7 +14,7 @@ Authentication will be implemented using Django auth. The site will have email v
 
 We are going to implement basic player functionalities: Players are able to search for games and buy them using Simple Payments. Players are able to play games that they have purchased. Our app adds the name of the game to players games-list when player buys the game from the website. Basic search functionality will be implemented in order for players to find games to buy.
 
-Developers are able to add and manage their own games on the site and set a price for them. Basic security, inventory and statics will be implemented inside the dev.py model.
+Developers are able to add and manage their own games on the site and set a price for them. Basic security, inventory and statics will be implemented inside the dev.<span></span>py model.
 
 Game/service interactions will be implimented using postMessage as requested. We will keep track of highscores and each players game states with appropriate models. 
 
