@@ -5,6 +5,7 @@ Jaakko Koskela
 Henri-Matias Tuomaala 
 
 # wsd18 project
+## General description 
 An online game store for JavaScript games. The service has two types of users: players and developers. Developers can add their games to the service and set a price for it. Players can buy games on the platform and then play purchased games online.
 
 We plan on implementing all the mandatory features. Additionally we plan on implementing 3rd Party login, RESTful API and our own game.
@@ -15,11 +16,18 @@ For additional features, the 3rd party login will use Google. The RESTful API wi
 
 ## Models
 1. user already found in django
-2. player inherit user (name, email, profile_pic, games)
+2. player inherit user (name, email, profile_pic, games dict with gamename: json string)
 3. dev inherit user (name, email, games, profile_pic, seller_id)
 4. game (name, price, link to game, highscore ordered dict) 
 
+## Working practices
+We plan on meeting weekly, propably every monday or tuesday. In the weekly meeting, we will present our work from the past week and plan our work for the following week. We are mainly going to work from home, but might arrange some development sessions. 
 
-## Implementation order and timetable:
-* 12.1. basic implementation working.
-* 19.2. final commit. 
+## Implementation order and timetable
+* Testing heroku and other unfamilliar tools and inital commits during the holidays.
+* 12.1. basic implementation working. Basic templates implemented and some functionality already exists. 
+* 26.1. All templates and functionality done.
+* 2.2. Security tested.
+* 9.2. The layout and appearance of the site finished started work additional features.
+* 16.2. All additional features implemented and tested. 
+* 19.2. Final tweaks and final commit. 
