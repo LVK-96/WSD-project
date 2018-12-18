@@ -21,17 +21,25 @@ Game/service interactions will be implimented using postMessage as requested. We
 For additional features, the 3rd party login will use Google. The RESTful API will provide a list of the available games in our site in a JSON format. Our own game will be a platformer in the style of Super Mario.
 
 ## Models
-1. user already found in django (username PRIMARY KEY, email, etc.)
-2. player inherit user (profile_pic, games)
-3. dev inherit user (profile_pic, games, seller_id)
+1. User already found in django (username PRIMARY KEY, email, etc.)
+2. Player inherit user (profile_pic, owned_games)
+3. Dev inherit user (profile_pic, seller_id)
 
-4. game (name PRIMARY KEY, price, link to game, highscores)
-5. highscores (game, username, score)
+4. Game (name PRIMARY KEY, dev_name, price, link to game, purchases)
+5. Highscores (game, username, score)
 
 The games that the user owns are listed in a dictionary in a field in the player model. The key in this dictionary will be the game/name of the game and the value will be the json string representing the current game state for this game and gamer.
 
+The amount of how many games a certain developer has created can be queried
+
+highscores
+
 usernames and emails are unique, username is the primary key
 user id -- unique
+
+## Views
+
+## Templates
 
 ## Working practices
 We plan on meeting weekly, propably every monday or tuesday. In the weekly meeting, we will present our work from the past week and plan our work for the following week. We are mainly going to work from home, but might arrange some development sessions.
