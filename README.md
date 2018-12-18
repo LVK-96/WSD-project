@@ -37,6 +37,8 @@ highscores
 usernames and emails are unique, username is the primary key
 user id -- unique
 
+<img src="model_graph.PNG" alt="Smiley face" height="420" width="420">
+
 ## Views
 
 ## Templates
