@@ -1,1 +1,1 @@
-web: gunicorn wsd_project/wsd_project.wsgi --log-file
+web: cd wsd_project && gunicorn wsd_project.wsgi
