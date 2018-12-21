@@ -1,3 +1,4 @@
+.vscode/
 wsd_venv/
 *.pyc
 pycache/
