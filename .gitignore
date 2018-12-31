@@ -1,4 +1,4 @@
 .vscode/
-wsd_venv/
+venv/
 *.pyc
 pycache/
