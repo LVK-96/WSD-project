@@ -10,8 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import os 
-import dotenv
-import dj_database_url
 
 # this line is already in your settings.py
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
