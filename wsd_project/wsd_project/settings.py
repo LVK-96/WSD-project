@@ -121,7 +121,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Configure Django App for Heroku.
 import django_heroku
