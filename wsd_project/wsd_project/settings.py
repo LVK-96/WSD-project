@@ -9,20 +9,12 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
+import os 
 import dotenv
 import dj_database_url
-import os 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+# this line is already in your settings.py
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-dotenv_file = os.path.join(BASE_DIR, ".env")
-if os.path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
-
-# load database from the DATABASE_URL environment variable
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -80,15 +72,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'wsd_project.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#} 
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   }
+} 
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -137,3 +126,8 @@ AUTH_USER_MODEL = 'users.User'
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals())
+
+# Heroku: Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
