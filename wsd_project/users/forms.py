@@ -5,7 +5,7 @@ from .models import CustomUser
 class SignupForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('username', 'email', 'is_dev', 'profile_pic')
+        fields = ('username', 'email', 'is_dev')
 
         labels = {
             'is_dev': 'Are you a developer?',
@@ -14,4 +14,4 @@ class SignupForm(UserCreationForm):
 class ChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'is_dev')

@@ -3,6 +3,7 @@
 {% block title %}Profile page{% endblock %}
 
 {% block content %}
-{{ user.username }} 
-{{ user.email }}
+<p>{{ user.username }}</p>
+<p>{{ user.email }}</p>
+<img src="{{ user.profile.profile_pic.url }}" alt="profile picture">
 {% endblock %}
