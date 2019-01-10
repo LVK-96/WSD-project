@@ -8,6 +8,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(blank=True, unique=True ,null=True, max_length=150)
     is_dev = models.BooleanField(default = False)
+    def isdev(self):
+        if (self.is_dev):
+            return True
+        else:
+            return False
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
