@@ -3,7 +3,7 @@ Forms for user signup and update
 '''
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser, Profile
 
 class SignupForm(UserCreationForm):
@@ -18,10 +18,11 @@ class SignupForm(UserCreationForm):
             'is_dev': 'Are you a developer?',
         }
 
-class ChangeForm(UserChangeForm):
+class ChangeForm(forms.ModelForm):
     '''
     Form for user update
     '''
+    email = forms.EmailField()
     class Meta:
         model = CustomUser
         fields = ('username', 'email')

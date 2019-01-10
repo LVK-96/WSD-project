@@ -3,18 +3,25 @@
 {% block title %}Profile page{% endblock %}
 
 {% block content %}
-<p>{{ user.username }}</p>
-<p>{{ user.email }}</p>
-<img src="{{ user.profile.profile_pic.url }}" alt="profile picture">
-<form method="post">
-    {% csrf_token %}
-    {{ u_form }}
-    {{ p_form }}
-    <button type="submit">Save</button>
-</form>
-{% if user.isdev %}
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'addgame' %}">Add Game</a>
-</li>
-{% endif %}
+<div>
+    <p>{{ user.username }}</p>
+    <p>{{ user.email }}</p>
+    <img src="{{ user.profile.profile_pic.url }}" alt="profile picture" height="80" width="80">
+</div>
+<div>
+    <p>Update info</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ u_form.as_p }}
+        {{ p_form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</div>
+<div>
+    {% if user.isdev %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'addgame' %}">Add Game</a>
+    </li>
+    {% endif %}
+</div>
 {% endblock %}
