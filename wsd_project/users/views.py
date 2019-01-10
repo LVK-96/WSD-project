@@ -23,16 +23,22 @@ def signup(request):
 
 @login_required
 def profilepage(request):
-    u_form = ChangeForm
-    p_form = ProfileUpdateForm
-    username = request.user.username
-    user = CustomUser.objects.get(username=username)
-    
+    if request.method == 'POST':
+        u_form = ChangeForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile) 
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            return redirect('profilepage')
+    else:
+        u_form = ChangeForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+        
     context = {
         'u_form': u_form,
-        'p_form': p_form
+        'p_form': p_form,
     }
     
-    return render(request, 'users/profile.html', {"user":user})
+    return render(request, 'users/profile.html', context)
 
     
