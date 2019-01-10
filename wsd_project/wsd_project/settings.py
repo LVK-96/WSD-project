@@ -126,6 +126,8 @@ MEDIA_URL = '/media/'
 # Redirect after login and logout
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+# default redirect when login required
+LOGIN_URL = 'login'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
