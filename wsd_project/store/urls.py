@@ -7,5 +7,5 @@ urlpatterns = [
     path('', views.index, name = 'index'),
     path('games', views.games, name = 'games'),
     path('highscores', views.highscores, name = 'highscores'),
-    path('addgame', login_required(views.AddGame.as_view()), name = 'addgame')
+    path('addgame', views.addgame, name = 'addgame')
 ]
