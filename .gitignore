@@ -3,4 +3,4 @@ venv/
 *.pyc
 pycache/
 *.sqlite3
-
+profile_pics/
