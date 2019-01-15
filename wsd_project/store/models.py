@@ -12,12 +12,23 @@ from users.models import CustomUser
 #how to check that the user is actually a dev?, and how to set a dev to the game?
 
 class Game(models.Model):
-    name = models.CharField(max_length = 50)
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
     dev = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    price = models.FloatField()
-    #link = models.URLField()?????
+    price = models.FloatField(default=0)
+    link = models.URLField(unique=True)
     #purchases = models.integerField(default=0)#when adding a new game should always be set to 0
     #tags = dictionary
 
+class Highscore(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0, unique=False)
 
-
+class Order(models.Model):
+    id = models.AutoField(primary_key=True)
+    #buyer 
+    player = models.ForeignKey(CustomUser, null=False, on_delete=models.CASCADE)
+    #bought games 
+    games = models.ManyToManyField(Game, default=None, blank=True)
+    total = models.FloatField(default=0, null=False)
+    #some reference or whatever from the payment system 
