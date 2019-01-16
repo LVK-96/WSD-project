@@ -12,7 +12,6 @@ from users.models import CustomUser
 #how to check that the user is actually a dev?, and how to set a dev to the game?
 
 class Game(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     dev = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     price = models.FloatField(default=0)
@@ -25,7 +24,6 @@ class Highscore(models.Model):
     score = models.IntegerField(default=0, unique=False)
 
 class Order(models.Model):
-    id = models.AutoField(primary_key=True) #this is the pid for payment system
     #buyer 
     player = models.ForeignKey(CustomUser, null=False, on_delete=models.CASCADE)
     #bought games 

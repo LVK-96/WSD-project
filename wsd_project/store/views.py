@@ -6,6 +6,7 @@ from .forms import NewGameForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from hashlib import md5
+from .models import Order
 #from django.utils.decorators import method_decorator
 
 from .models import Game
@@ -36,10 +37,11 @@ def addgame(request):
 @login_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
-    if request.method == 'POST':
-        form = CartForm(request.POST, instance=request.user)
-        if form.is_valid:
-            #calculate checksum
-            checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.user.order.id, "wsd18store", request.user.order.total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
-            checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
-            form.save()
+    if Order.objects.filter(player=request.user).exists():
+        order = Order.objects.get(player_id=request.user.id)
+    else:
+        order = Order.objects.create(player=request.user)
+
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(order.id, "wsd18store", order.total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
+    return render(request, 'store/cart.html', {'checksum': checksum, 'order': order})

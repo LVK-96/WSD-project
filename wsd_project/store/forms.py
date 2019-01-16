@@ -1,5 +1,5 @@
 from django import forms
-from .models import Game
+from .models import Game, Order
 
 class NewGameForm(forms.ModelForm):
     class Meta:
