@@ -5,6 +5,7 @@ from django.views import generic
 from .forms import NewGameForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from hashlib import md5
 #from django.utils.decorators import method_decorator
 
 from .models import Game
@@ -32,12 +33,13 @@ def addgame(request):
     
     return render(request, 'store/addgame.html', {'form': form})
 
-    #form_class = NewGameForm
-    #success_url = reverse_lazy('')#where does it redirect?
-    #template_name = 'store/addgame.html'
-    ##@method_decorator(login_required)
-    #def form_valid(self, form):
-    #    #check that the user is dev
-    #    #ran when a valid form is submitted
-    #    form.instance.dev = self.request.user#set the developer of this game as the user
-    #    return super().form_valid(form)
+@login_required
+def cart(request):
+    # payment service: http://payments.webcourse.niksula.hut.fi/
+    if request.method == 'POST':
+        form = CartForm(request.POST, instance=request.user)
+        if form.is_valid:
+            #calculate checksum
+            checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.user.order.id, "wsd18store", request.user.order.total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+            checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
+            form.save()
