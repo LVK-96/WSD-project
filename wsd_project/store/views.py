@@ -24,15 +24,18 @@ def highscores(request):
 #add a login required decorator
 @login_required
 def addgame(request):
-    if request.method == 'POST':
-        form = NewGameForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profilepage')
-    else:
-        form = NewGameForm(instance=request.user)
+    if request.user.isdev():
+        if request.method == 'POST':
+            form = NewGameForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect('profilepage')
+        else:
+            form = NewGameForm(instance=request.user)
     
-    return render(request, 'store/addgame.html', {'form': form})
+        return render(request, 'store/addgame.html', {'form': form})
+    else:
+        return redirect('profilepage')
 
 @login_required
 def cart(request):
