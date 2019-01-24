@@ -15,7 +15,10 @@ class Game(models.Model):
 
 class Highscore(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    player = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, unique=False)
+    class Meta:
+        unique_together = ('game', 'player')
 
 class Order(models.Model):
     #buyer 

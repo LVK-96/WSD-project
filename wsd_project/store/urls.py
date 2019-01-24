@@ -8,5 +8,7 @@ urlpatterns = [
     path('games', views.games, name='games'),
     path('highscores', views.highscores, name='highscores'),
     path('addgame', views.addgame, name='addgame'),
-    path('cart', views.cart, name='cart')
+    path('cart', views.cart, name='cart'),
+    path('highscore/<int:game_pk>/<int:new_score>', views.addhighscore, name='highscore')
+
 ]

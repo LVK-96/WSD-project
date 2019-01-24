@@ -6,7 +6,7 @@ from .forms import NewGameForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from hashlib import md5
-from .models import Order
+from .models import Order, Highscore, Game
 #from django.utils.decorators import method_decorator
 
 from .models import Game
@@ -51,3 +51,18 @@ def cart(request):
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(order.id, "wsd18store", order.total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'order': order})
+
+
+#what other constraints are needed (cant add highscores without playing, the player actually owns the game)
+#the game field in the highscores is a foreign key -> the primary key of the game
+@login_required
+def addhighscore(request, game_pk, new_score):
+    if request.method == 'POST':
+        if Highscore.objects.filter(player=request.user, game=game_pk):
+            #if highscore already exists, update it
+            highscores = Highscore.objects.get(player=request.user, game=game_pk)
+        else:
+            #if highscore doesn't exist, create one
+            Highscore.objects.create(game=game_pk, player = request.user, score = new_score)
+        return redirect('profilepage')
+         
