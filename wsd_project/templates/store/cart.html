@@ -1,5 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
     <p>cart</p>
-    <p>{{ checksum }}</p>
+    <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
+        <input type="hidden" name="pid" value="{{ order.id }}" />
+        <input type="hidden" name="sid" value="wsd18store" />
+        <input type="hidden" name="success_url"
+                value="http://localhost:8000/payment/success" />
+        <input type="hidden" name="cancel_url"
+                value="http://localhost:8000/payment/cancel" />
+        <input type="hidden" name="error_url"
+                value="http://localhost:8000/payment/error" />
+        <input type="hidden" name="checksum"
+                value= "{{ checksum }}" />
+    
+        <label for="id_amount">Amount</label>
+        <input type="text" id="id_amount" name="amount" value="{{ order.total }}" readonly/>
+        <input type="submit" value="Accept Payment"/>
+    </form>
 {% endblock %}
