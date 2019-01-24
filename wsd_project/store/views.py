@@ -26,12 +26,15 @@ def highscores(request):
 def addgame(request):
     if request.user.isdev():
         if request.method == 'POST':
-            form = NewGameForm(request.POST, instance=request.user)
+            form = NewGameForm(request.POST)
             if form.is_valid():
-                form.save()
+                game = form.save(commit = False)
+                game.dev = request.user
+                game.save()
+
                 return redirect('profilepage')
         else:
-            form = NewGameForm(instance=request.user)
+            form = NewGameForm()
     
         return render(request, 'store/addgame.html', {'form': form})
     else:
