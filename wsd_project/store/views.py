@@ -50,16 +50,20 @@ def cart(request):
     if 'cart' not in request.session:
         request.session['cart'] = ''
     
-    cart = request.session['cart']
-    cart.split(",")
+    user_cart = request.session['cart']
+    user_cart.split(",")
     total = 0
-    for game_id in cart:
-        game = Game.objects.get(id == game_id)
+    for game_id in user_cart:
+        game = Game.objects.get(pk=game_id)
         total += game.price
     
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.user.id, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+
+    current_user = request.user
+    print(request.session.session_key)
+    print(total)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
-    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total})
+    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
 
 def payment_success(request):
     #request.user.addgame
