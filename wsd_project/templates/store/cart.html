@@ -14,7 +14,7 @@
                 value= "{{ checksum }}" />
     
         <label for="id_amount">Amount</label>
-        <input type="text" id="id_amount" name="amount" value="{{ order.total }}" readonly/>
+        <input type="text" id="id_amount" name="amount" value="{{ total }}" readonly/>
         <input type="submit" value="Accept Payment"/>
     </form>
 {% endblock %}

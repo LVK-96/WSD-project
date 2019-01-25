@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save
 from .models import CustomUser, Profile
+from store.models import Order
 from django.dispatch import receiver
 
 @receiver(post_save, sender=CustomUser)
