@@ -29,11 +29,16 @@
             <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'games' %}">Games</a>
+            <a class="nav-link" href="{% url 'store' %}">Store</a>
+          </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'my_library' %}">My library</a>
           </li>
           <li class="nav-item">
               <a class="nav-link" href="{% url 'highscores' %}">Highscores</a>
           </li>
+          {% endif %}
           {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'profilepage' %}">My profile</a>
