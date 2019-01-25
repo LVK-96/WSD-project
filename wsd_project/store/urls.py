@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('store', views.store, name='store'),
     path('library', views.my_library, name='my_library'),
+    path('library/startgame/<int:game_pk>', views.startgame, name='startgame'),
     path('highscores', views.highscores, name='highscores'),
     path('addgame', views.addgame, name='addgame'),
     path('cart', views.cart, name='cart'),

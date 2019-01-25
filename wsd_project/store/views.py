@@ -66,6 +66,9 @@ def payment_error(request):
 
 #what other constraints are needed (cant add highscores without playing, the player actually owns the game)
 #the game field in the highscores is a foreign key -> the primary key of the game
+#a new highscore, with the minimum score should be added when a player purchases the game - this can be used
+#to tell if a player has puirchased a specific game
+
 @login_required
 def addhighscore(request, game_pk, new_score):
     if request.method == 'POST':
@@ -76,4 +79,18 @@ def addhighscore(request, game_pk, new_score):
             #if highscore doesn't exist, create one
             Highscore.objects.create(game=game_pk, player = request.user, score = new_score)
     return redirect('profilepage')
-         
+
+@login_required
+def startgame(request, game_pk):
+    print(request.user, game_pk)
+    print(Highscore.objects.all())
+    if Highscore.objects.filter(player=request.user, game=game_pk):
+        #if highscore exists the player owns the game
+        print('highscore exists for player')
+        game = Game.objects.get(pk=game_pk)
+        return render(request, 'store/startgame.html', {'game' : game})
+    else:
+        print("redirected")
+        #if highscore doesn't exist, the player doesn't own the game
+        return redirect('my_library')#should it be mylibrary.html
+
