@@ -1,3 +1,5 @@
+''' Write views here '''
+from hashlib import md5
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -5,21 +7,21 @@ from django.views import generic
 from .forms import NewGameForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from hashlib import md5
 from .models import Order, Highscore, Game
 #from django.utils.decorators import method_decorator
-
-from .models import Game
 
 # Create your views here.
 def index(request):
     return render(request, 'store/home.html')
 
-def games(request):
-    return render(request, 'store/games.html')
+def store(request):
+    return render(request, 'store/store.html')
 
 def highscores(request):
     return render(request, 'store/highscores.html')
+
+def my_library(request):
+    return render(request, 'store/my_library.html')
 
 #add a login required decorator
 @login_required
@@ -52,6 +54,15 @@ def cart(request):
     checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'order': order})
 
+
+def payment_success(request):
+    return render(request, 'store/payment_success.html')
+
+def payment_cancel(request):
+    return render(request, 'store/payment_cancel.html')
+
+def payment_error(request):
+    return render(request, 'store/payment_error.html')
 
 #what other constraints are needed (cant add highscores without playing, the player actually owns the game)
 #the game field in the highscores is a foreign key -> the primary key of the game
