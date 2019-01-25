@@ -75,5 +75,5 @@ def addhighscore(request, game_pk, new_score):
         else:
             #if highscore doesn't exist, create one
             Highscore.objects.create(game=game_pk, player = request.user, score = new_score)
-        return redirect('profilepage')
+    return redirect('profilepage')
          
