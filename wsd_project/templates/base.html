@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <style>
             body {
@@ -44,10 +44,13 @@
                 color: rgb(191, 191, 191);
                 text-align: center;
             }
+            .signup {
+                text-align: left;
+            }
 
         </style>
 
-        <title>GameStore&#127918;</title>
+        <title>GameStore &#127918;</title>
         <link rel="icon" type="image/ico" href="media/game_store.png" />
 
     </head>
@@ -82,8 +85,8 @@
                     <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}">Sign up</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Sign up</a>
                 </ul>
                 {% endif %}
                 {% if user.is_authenticated %}
