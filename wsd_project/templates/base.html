@@ -39,8 +39,9 @@
             .jumbotron {
                 background-color: black;
             }
-            ul {
+            .container {
                 color: red;
+                text-align: center;
             }
 
         </style>
@@ -55,7 +56,9 @@
         <div class="container-fluid">
             <div class="box">
                 <div class="one">
-                    <img class="resize" src="media/game_store.png" alt="logo">
+                    <a href="{% url 'index' %}" title="Game Store">
+                        <img class="resize" src="media/game_store.png" alt="logo">
+                    </a>
                 </div>
                 <div class="two">
                     <p class="text-muted" style="font-size: 150%">
@@ -93,7 +96,7 @@
         <main>
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
-                    <ul class="content">{% block content %}{% endblock %}</ul>
+                    {% block content %}{% endblock %}
                 </div>
             </div>
         </main>
