@@ -22,7 +22,7 @@ class Highscore(models.Model):
 
 class Order(models.Model):
     #buyer 
-    player = models.ForeignKey(CustomUser, null=False, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     #bought games 
-    games = models.ManyToManyField(Game, default=None, blank=True)
+    games = models.ManyToManyField(Game)
     total = models.FloatField(default=0, null=False)

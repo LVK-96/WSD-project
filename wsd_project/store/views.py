@@ -15,6 +15,8 @@ def index(request):
     return render(request, 'store/home.html')
 
 def store(request):
+    if request.method == 'POST':
+        request.session['cart'] = request.POST.get("id") 
     return render(request, 'store/store.html')
 
 def highscores(request):
@@ -47,17 +49,27 @@ def addgame(request):
 @login_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
-    if Order.objects.filter(player=request.user).exists():
-        order = Order.objects.get(player_id=request.user.id)
-    else:
-        order = Order.objects.create(player=request.user)
+    if 'cart' not in request.session:
+        request.session['cart'] = ''
+    
+    user_cart = request.session['cart']
+    user_cart.split(",")
+    total = 0
+    for game_id in user_cart:
+        game = Game.objects.get(pk=game_id)
+        total += game.price
+    
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(order.id, "wsd18store", order.total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    current_user = request.user
+    print(request.session.session_key)
+    print(total)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
-    return render(request, 'store/cart.html', {'checksum': checksum, 'order': order})
-
+    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
 
 def payment_success(request):
+    #request.user.addgame
+    #request.user.addorder 
     return render(request, 'store/payment_success.html')
 
 def payment_cancel(request):

@@ -6,17 +6,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <style>
             body {
                 background-color: black;
+                background-image: linear-gradient(to right, rgb(51, 51, 51), rgb(13, 13, 13));
             }
             .resize {
                 max.width: 75%;
             }
             .container-fluid {
                 background-color: rgb(31, 31, 20);
+                background-image: linear-gradient(to right, rgb(31, 31, 20), black);
                 padding: 1%;
             }
             .box {
@@ -30,22 +32,25 @@
                 margin: auto;
                 text-align: center;
             }
-            .p {
-                font-size: 30px;
-            }
             .navbar {
                 background-color: rgb(47, 47, 30);
+                background-image: linear-gradient(to right, rgb(47, 47, 30), rgb(16, 16, 10));
             }
             .jumbotron {
                 background-color: black;
+                background-image: linear-gradient(to right, rgb(51, 51, 51), rgb(13, 13, 13));
             }
-            ul {
-                color: red;
+            .container {
+                color: rgb(191, 191, 191);
+                text-align: center;
+            }
+            .signup {
+                text-align: left;
             }
 
         </style>
 
-        <title>GameStore&#127918;</title>
+        <title>GameStore &#127918;</title>
         <link rel="icon" type="image/ico" href="media/game_store.png" />
 
     </head>
@@ -55,7 +60,9 @@
         <div class="container-fluid">
             <div class="box">
                 <div class="one">
-                    <img class="resize" src="media/game_store.png" alt="logo">
+                    <a href="{% url 'index' %}" title="Game Store">
+                        <img class="resize" src="media/game_store.png" alt="logo">
+                    </a>
                 </div>
                 <div class="two">
                     <p class="text-muted" style="font-size: 150%">
@@ -72,28 +79,34 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav">
+                {% if not user.is_authenticated %}
+                <ul class="nav navbar-nav">
                     <a class="nav-item nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
-                    {% if user.is_authenticated %}
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
+                    <a class="nav-item nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+                    <a class="nav-item nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Sign up</a>
+                </ul>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <ul class="nav navbar-nav">
+                    <a class="nav-item nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
                     <a class="nav-item nav-link" href="{% url 'my_library' %}">My library</a>
-                    <a class="nav-item nav-link" href="{% url 'highscores' %}">Highscores</a>
-                    {% endif %}
-                    {% if user.is_authenticated %}
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
                     <a class="nav-item nav-link" href="{% url 'profilepage' %}">My profile</a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
-                    {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'signup' %}">Sign up</a>
-                    {% endif %}
-                </div>
+                </ul>
+                {% endif %}
             </div>
         </nav>
 
         <main>
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
-                    <ul class="content">{% block content %}{% endblock %}</ul>
+                    {% block content %}{% endblock %}
                 </div>
             </div>
         </main>
