@@ -21,9 +21,11 @@ def highscores(request):
     return render(request, 'store/highscores.html')
 
 def my_library(request):
-    return render(request, 'store/my_library.html')
+    #In highscores foreign keys are saved as
+    myhighscores = Highscore.objects.filter(player_id=request.user.pk)
+    allgames = Game.objects.all()
+    return render(request, 'store/my_library.html', {'myhighscores': myhighscores, 'allgames': allgames})
 
-#add a login required decorator
 @login_required
 def addgame(request):
     if request.user.isdev():
@@ -82,15 +84,11 @@ def addhighscore(request, game_pk, new_score):
 
 @login_required
 def startgame(request, game_pk):
-    print(request.user, game_pk)
-    print(Highscore.objects.all())
     if Highscore.objects.filter(player=request.user, game=game_pk):
         #if highscore exists the player owns the game
-        print('highscore exists for player')
         game = Game.objects.get(pk=game_pk)
         return render(request, 'store/startgame.html', {'game' : game})
     else:
-        print("redirected")
         #if highscore doesn't exist, the player doesn't own the game
         return redirect('my_library')#should it be mylibrary.html
 
