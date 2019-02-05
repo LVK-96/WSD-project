@@ -15,9 +15,11 @@ def index(request):
     return render(request, 'store/home.html')
 
 def store(request):
+    allgames = Game.objects.all()
+    response = render(request, 'store/store.html', {'allgames': allgames})
     if request.method == 'POST':
-        request.session['cart'] = request.POST.get("id") 
-    return render(request, 'store/store.html')
+        response.set_cookie('cart', request.POST.get("id")) 
+    return response
 
 def highscores(request):
     return render(request, 'store/highscores.html')
