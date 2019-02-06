@@ -51,7 +51,8 @@
         </style>
 
         <title>GameStore &#127918;</title>
-        <link rel="icon" type="image/ico" href="media/game_store.png" />
+        {% load staticfiles %}
+        <link rel="icon" type="image/ico" href="{% static 'game_store.png' %}" />
 
     </head>
 
@@ -61,7 +62,8 @@
             <div class="box">
                 <div class="one">
                     <a href="{% url 'index' %}" title="Game Store">
-                        <img class="resize" src="media/game_store.png" alt="logo">
+                        {% load staticfiles %}
+                        <img class="resize" src="{% static 'game_store.png' %}" alt="logo">
                     </a>
                 </div>
                 <div class="two">
@@ -97,7 +99,7 @@
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
                     <a class="nav-item nav-link" href="{% url 'profilepage' %}">My profile</a>
-                    <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                    <a class="nav-item nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
                 </ul>
                 {% endif %}
             </div>
