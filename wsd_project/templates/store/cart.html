@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
     <p>cart</p>
+    <ul>
+        {% for game, price in games_and_prices %}
+                <li>{{ game }} {{ price }}</li>
+        {% endfor %}
+    </ul>
+    
     <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
         <input type="hidden" name="pid" value="{{ cart_id }}" />
         <input type="hidden" name="sid" value="wsd18store" />

@@ -21,7 +21,10 @@ def store(request):
         if 'cart' not in request.session:
             request.session['cart'] = []
         user_cart = request.session['cart']
-        user_cart.append(request.POST.get("id"))
+        
+        highscores = Highscore.objects.filter(game = Game.objects.get(pk = request.POST.get("id")), player = request.user)
+        if request.POST.get("id") not in user_cart and not highscores: # No duplicate items in cart and user does not already own game
+            user_cart.append(request.POST.get("id"))
         request.session['cart'] = user_cart
     return response
 
@@ -59,20 +62,41 @@ def cart(request):
        request.session['cart'] = []
     
     user_cart = request.session['cart']
+    prices = []
     total = 0
     for game_id in user_cart:
         game = Game.objects.get(pk=game_id)
         total += game.price
+        prices.append(game.price)
     
+    games_and_prices = zip(user_cart, prices)
     current_user = request.user
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
-    checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
-    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
+    checksum = md5(checksumstr.encode("ascii")).hexdigest()
+    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'games_and_prices': games_and_prices})
 
 def payment_success(request):
-    #request.user.addgame
-    #request.user.addorder 
-    return render(request, 'store/payment_success.html')
+    # calculate checksum
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksum = md5(checksumstr.encode("ascii")).hexdigest()
+    if (checksum == request.GET.get("checksum")):
+        # delete cart from session
+        # add order to db
+        # add games to user
+        order = Order.objects.create(user=request.user)
+        user_cart = request.session['cart']
+        order_total = 0
+        del request.session['cart']
+        for game_id in user_cart:
+            game = Game.objects.get(pk=game_id)
+            highscore = Highscore(player=request.user, game=game)
+            highscore.save()
+            order_total += game.price
+            order.games.add(game)
+        order.total = order_total
+        order.save()
+        return render(request, 'store/payment_success.html')
+    return render(request, 'store/payment_error.html')
 
 def payment_cancel(request):
     return render(request, 'store/payment_cancel.html')
