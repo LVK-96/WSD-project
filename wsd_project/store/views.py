@@ -18,7 +18,11 @@ def store(request):
     allgames = Game.objects.all()
     response = render(request, 'store/store.html', {'allgames': allgames})
     if request.method == 'POST':
-        response.set_cookie('cart', request.POST.get("id")) 
+        if 'cart' not in request.session:
+            request.session['cart'] = []
+        user_cart = request.session['cart']
+        user_cart.append(request.POST.get("id"))
+        request.session['cart'] = user_cart
     return response
 
 def highscores(request):
@@ -52,19 +56,15 @@ def addgame(request):
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
     if 'cart' not in request.session:
-        request.session['cart'] = ''
+       request.session['cart'] = []
     
     user_cart = request.session['cart']
-    user_cart.split(",")
     total = 0
     for game_id in user_cart:
         game = Game.objects.get(pk=game_id)
         total += game.price
     
-
     current_user = request.user
-    print(request.session.session_key)
-    print(total)
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = (md5(checksumstr.encode("ascii"))).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
