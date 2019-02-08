@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
-
 {% block title %}You Are Playing A Game{% endblock %}
 
 {% block content %}
+<head>
+        <!--Load jquery and the event handler script-->
+    {% load staticfiles %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static 'startgame.js' %}"></script>
+</head>
 <h2>{{ game.name }}</h2>
 
 <p>
