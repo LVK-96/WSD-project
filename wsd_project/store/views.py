@@ -21,7 +21,6 @@ def store(request):
         if 'cart' not in request.session:
             request.session['cart'] = []
         user_cart = request.session['cart']
-        
         highscores = Highscore.objects.filter(game = Game.objects.get(pk = request.POST.get("id")), player = request.user)
         if request.POST.get("id") not in user_cart and not highscores: # No duplicate items in cart and user does not already own game
             user_cart.append(request.POST.get("id"))
