@@ -47,6 +47,16 @@
             .signup {
                 text-align: left;
             }
+            .btn {
+                display: inline-block;
+                background: white;
+                color: #444;
+                width: 190px;
+                border-radius: 5px;
+                border: thin solid #888;
+                box-shadow: 1px 1px 1px grey;
+                white-space: nowrap;
+            }
 
         </style>
 
@@ -96,9 +106,11 @@
                     <a class="nav-item nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
                     <a class="nav-item nav-link" href="{% url 'my_library' %}">My library</a>
+                    <a class="nav-item nav-link" href="{% url 'highscores' %}">Highscores</a>
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
-                    <a class="nav-item nav-link" href="{% url 'profilepage' %}">My profile</a>
+                                        <a class="nav-item nav-link" href="{% url 'cart' %}"><span class="fas fa-shopping-cart"></span> Cart</a>
+                    <a class="nav-item nav-link" href="{% url 'profilepage' %}"><span class="fas fa-user"></span> My profile</a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
                 </ul>
                 {% endif %}
