@@ -3,7 +3,7 @@
     <p>cart</p>
     <ul>
         {% for game, price in games_and_prices %}
-                <li>{{ game }} {{ price }}</li>
+                <li>{{ game.name }} {{ price }}</li>
         {% endfor %}
     </ul>
     

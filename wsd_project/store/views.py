@@ -62,14 +62,16 @@ def cart(request):
        request.session['cart'] = []
     
     user_cart = request.session['cart']
+    games = []
     prices = []
     total = 0
     for game_id in user_cart:
         game = Game.objects.get(pk=game_id)
+        games.append(game)
         total += game.price
         prices.append(game.price)
     
-    games_and_prices = zip(user_cart, prices)
+    games_and_prices = zip(games, prices)
     current_user = request.user
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
@@ -114,6 +116,7 @@ def addhighscore(request, game_pk, new_score):
     if request.method == 'POST':
         if Highscore.objects.filter(player=request.user, game=game_pk):
             #if highscore already exists, update it
+            # TODO: fix this 
             highscores = Highscore.objects.get(player=request.user, game=game_pk)
         else:
             #if highscore doesn't exist, create one
