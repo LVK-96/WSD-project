@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-    <p>My game library</p>
+    <h3 class="lib-header"><b>This is the game library. Here you can find the games you have purchased!</b></h3>
     {% for highscore in myhighscores %}
         {% for game in allgames %}
             {% if game.id == highscore.game_id %}
-                {{ game.name }}
+            <div class="lib-games">
+                <a type="button" class="btn btn-outline-success" href="{% url 'startgame' game.id %}" style="overflow:hidden;">
+                    {{ game.name|linebreaks }}
+                </a>
+            </div>
             {% endif %}
         {% endfor %}
     {% endfor %}
