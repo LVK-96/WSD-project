@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h3 class="lib-header"><b>This is the game library. Here you can find the games you have purchased!</b></h3>
+    <div class="alert alert-dark alert-dismission fade show" role="alert">
+        This is where you can find all the games that you have bought!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <h4 id="lib-header">My library</h4>
+    <hr>
     {% for highscore in myhighscores %}
         {% for game in allgames %}
             {% if game.id == highscore.game_id %}
             <div class="lib-games">
-                <a type="button" class="btn btn-outline-success" href="{% url 'startgame' game.id %}" style="overflow:hidden;">
+                <a type="button" class="btn btn-success" href="{% url 'startgame' game.id %}" style="overflow:hidden;">
                     {{ game.name|linebreaks }}
                 </a>
             </div>
