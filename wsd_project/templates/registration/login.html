@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
-
-{% block title %}Login{% endblock %}
-
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-<br>
-    <p>
-        <strong> OR </strong>
-    </p>
-</br>
-<a class="btn btn-danger btn-block" id="google" href="{% url 'social:begin' 'google-oauth2' %}">
-    <i class="fab fa-google"></i> Login with <b>Google</b></a>
+<h4 id="lib-header">Login</h4>
+<hr>
+<div class="card mx-auto" style="width: 20rem; color: black;">
+    <div class="card-body">
+        <h3 class="card-title font-weight-light">Login</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-outline-dark" type="submit">Login</button>
+        </form>
+        <br>
+            <p>
+                <strong> OR </strong>
+            </p>
+        <a class="btn btn-danger btn-block" id="google" href="{% url 'social:begin' 'google-oauth2' %}">
+            <i class="fab fa-google"></i> Login with <b>Google</b>
+        </a>
+    </div>
+</div>
 {% endblock %}
