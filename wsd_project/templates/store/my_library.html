@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="alert alert-dark alert-dismission fade show" role="alert">
-        This is where you can find all the games that you have bought!
+        Click on the game you want to play!
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <h4 id="lib-header">My library</h4>
     <hr>
-    {% for highscore in myhighscores %}
-        {% for game in allgames %}
-            {% if game.id == highscore.game_id %}
-            <div class="lib-games">
-                <a type="button" class="btn btn-success" href="{% url 'startgame' game.id %}" style="overflow:hidden;">
-                    {{ game.name|linebreaks }}
-                </a>
-            </div>
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            {% for highscore in myhighscores %}
+                {% for game in allgames %}
+                    {% if game.id == highscore.game_id %}
+                        <div class="col-lg-4 col-md-6 col-sm-12" id="store">
+                            <div class="card bg-dark mx-auto" style="width: 16rem;">
+                                <a type="button" class="btn btn-secondary btn-lg" href="{% url 'startgame' game.id %}" style="overflow:hidden;">
+                                    {{ game.name|linebreaks }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
 {% endblock %}
