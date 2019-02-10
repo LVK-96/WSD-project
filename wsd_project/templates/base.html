@@ -39,13 +39,11 @@
             .jumbotron {
                 background-color: black;
                 background-image: linear-gradient(to right, rgb(51, 51, 51), rgb(13, 13, 13));
-            }
-            .container {
                 color: rgb(191, 191, 191);
                 text-align: center;
             }
             .signup {
-                text-align: left;
+                text-align: center;
             }
             .btn {
                 display: inline-block;
@@ -58,14 +56,22 @@
                 white-space: nowrap;
             }
             iframe {
-                width: device-width;
-                height: device-height;
+                background-color: rgb(217, 217, 217);
+                /*overflow: scroll;*/
+
             }
             .lib-games {
                 margin-bottom: 10px;
             }
             .lib-header {
                 margin-bottom: 30px;
+            }
+            #store {
+                padding: 20px;
+                color: black;
+            }
+            .card {
+                background-image: linear-gradient(to right, rgb(128, 128, 128), white);
             }
 
         </style>
@@ -129,9 +135,9 @@
 
         <main>
             <div class="jumbotron jumbotron-fluid">
-                <div class="container">
+                <!--<div class="container">-->
                     {% block content %}{% endblock %}
-                </div>
+                <!--</div>-->
             </div>
         </main>
 
