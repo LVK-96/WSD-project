@@ -24,32 +24,31 @@ $(document).ready(function() {
     function receiveMessage(event){
 
         console.log("received message from the iframe")
+        //find the source attribute of the iframe (for post message origin checks)
+        var source = $("iframe").attr('src');
 
         //origin does not have the resource appended to it only the protocol and domain
-        if ("http://webcourse.cs.hut.fi/example_game.html".indexOf(event.origin) !== -1){
-            console.log("correct origin")
+        if (source.indexOf(event.origin) !== -1){
+            console.log("correct origin");
             if(event.data.messageType == "SETTING"){
-                console.log("settings received")
+                console.log("settings received");
             }
             else if(event.data.messageType == "SCORE"){
-                console.log("score received")
+                console.log("score received");
+                var score = event.data.score;
             }
             else if(event.data.messageType == "SAVE"){
-                console.log("save request received")
+                console.log("save request received");
             }
             else if(event.data.messageType == "LOAD_REQUEST"){
-                console.log("load request received")
+                console.log("load request received");
             }
             else{
-                console.log("message not identified")
+                console.log("message not identified");
             }
         }
-        console.log("origin")
-        console.log(event.origin)
-        console.log("data")
-        console.log(event.data)
-        console.log("source")
-        console.log(event.source)
+        console.log("data");
+        console.log(event.data);
     }
 });
 
