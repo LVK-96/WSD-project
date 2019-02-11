@@ -129,6 +129,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "media"),
+    os.path.join(BASE_DIR, "store/static"),
 ]
 
 STATIC_ROOT = "/var/wsdstore/static"

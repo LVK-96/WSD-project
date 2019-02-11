@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for game in allgames %}
-    {{game.name}}    
-    {% if user.is_authenticated %}
-    <form method="POST">
-        {% csrf_token %}        
-        <input type="hidden" name="id" value="{{ game.id }}" />
-        <input type="submit" value="Add to cart">
-    </form>
-    {% endif %}
-{% endfor %}
+<h4 id="lib-header">Store</h4>
+<hr>
+<div class="container">
+    <div class="row">
+        {% for game in allgames %}
+            <div class="col-lg-4 col-md-6 col-sm-12" id="store">
+                <div class="card bg-dark mx-auto" style="width: 16rem;">
+                    <h4 class="card-title">{{game.name}}</h4>
+                    <p class="card-text">
+                        <span class="badge badge-success">Price: {{ game.price }}€</span>
+                    </p>
+                    {% if user.is_authenticated %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ game.id }}" />
+                        <input class="btn btn-success btn-sm" type="submit" value="Add to cart">
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

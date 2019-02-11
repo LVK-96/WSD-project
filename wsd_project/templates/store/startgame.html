@@ -1,12 +1,37 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-{% block title %}You Are Playing A Game{% endblock %}
-<h2>{{ game.name }}</h2>
+<head>
+        <!--Load jquery and the event handler script-->
+    {% load staticfiles %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <script src="{% static 'startgame.js' %}"></script>
+</head>
+<h4 id="lib-header">Game</h4>
+<hr>
+<p style="font-size: 200%; overflow-x:auto;">{{ game.name }}</p>
 
-<div class="embed-responsive embed-responsive-16by9">
-    <iframe class="embed-responsive-item" src="http://webcourse.cs.hut.fi/example_game.html"><iframe>
+<!-- TO DO: make this modal IOS friendly-->
+<div class="text-center">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Click here to launch</button>
 </div>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body mb-0 p-0">
+                <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+                    <iframe class="embed-responsive-item" src="http://webcourse.cs.hut.fi/example_game.html"><iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#myModal').on('shown.bs.modal', function () {
+    $('#myInput').trigger('focus')
+    })
+</script>
 {% endblock %}

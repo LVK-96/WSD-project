@@ -124,6 +124,7 @@ def addhighscore(request, game_pk, new_score):
 
 @login_required
 def startgame(request, game_pk):
+
     if Highscore.objects.filter(player=request.user, game=game_pk):
         #if highscore exists the player owns the game
         game = Game.objects.get(pk=game_pk)

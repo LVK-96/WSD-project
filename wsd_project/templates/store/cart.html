@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-    <p>cart</p>
-    <ul>
+<h4 id="lib-header">Cart</h4>
+<hr>
+    <table class="table table-bordered mx-auto">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+            </tr>
+        <thead>
+        <tbody>
         {% for game, price in games_and_prices %}
-                <li>{{ game.name }} {{ price }}</li>
+            <tr>
+                <td>{{ game.name }}</td>
+                <td>{{ price }}€</td>
+            </tr>
         {% endfor %}
-    </ul>
-    
+        </tbody>
+    </table>
+
     <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
         <input type="hidden" name="pid" value="{{ cart_id }}" />
         <input type="hidden" name="sid" value="wsd18store" />
@@ -18,9 +30,9 @@
                 value="http://localhost:8000/payment/error" />
         <input type="hidden" name="checksum"
                 value= "{{ checksum }}" />
-    
-        <label for="id_amount">Amount</label>
+
+        <label for="id_amount">Amount:</label>
         <input type="text" id="id_amount" name="amount" value="{{ total }}" readonly/>
-        <input type="submit" value="Accept Payment"/>
+        <input class="btn btn-outline-light" type="submit" value="Accept Payment"/>
     </form>
 {% endblock %}
