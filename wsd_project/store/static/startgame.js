@@ -16,6 +16,38 @@ $(document).ready(function() {
     });
 });
 */
+/*HTMLIFrameElement.contentWindow (to reference an embedded <iframe> from its parent window)*/
+
+// Following getCookie function, csrf safe method and ajax setup copiedfrom django specification  from https://docs.djangoproject.com/en/2.1/ref/csrf/
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 
 
 $(document).ready(function() {
@@ -32,19 +64,30 @@ $(document).ready(function() {
             console.log("correct origin");
             if(event.data.messageType == "SETTING"){
                 console.log("settings received");
+                // mainly to set the resolution
             }
             else if(event.data.messageType == "SCORE"){
                 console.log("score received");
                 var score = event.data.score;
+                //the game number is currently hardcoded - due to change
+                $.ajax({
+                    type: "POST",
+                    url: "http://127.0.0.1:8000/library/startgame/1",
+                    data: "data-string"
+                    });
+                //make a ajax POST REQUEST to the view 
             }
             else if(event.data.messageType == "SAVE"){
                 console.log("save request received");
+                //to save the gamestate to the service
             }
             else if(event.data.messageType == "LOAD_REQUEST"){
                 console.log("load request received");
+                //request to load gamestate from service => respond with postmessage with message type as LOAD and data as the given data
             }
             else{
                 console.log("message not identified");
+                //should send an error postmessage to the game
             }
         }
         console.log("data");

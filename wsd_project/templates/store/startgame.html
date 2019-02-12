@@ -8,9 +8,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
     <script src="{% static 'startgame.js' %}"></script>
+    <!--<script>
+            console.log("RUNNING SCRIPT FOR POST REQUEST")
+            $.ajax({ type: "POST", url: "/library/startgame/1", data: {csrfmiddlewaretoken: '{{ csrf_token }}',}});
+    </script> -->
 </head>
 {% block title %}You Are Playing A Game{% endblock %}
 <h2>{{ game.name }}</h2>
+
+{% csrf_token %}
 
 <!-- TO DO: make this modal mobile friendly-->
 <div class="text-center">
