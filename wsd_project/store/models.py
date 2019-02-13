@@ -21,8 +21,21 @@ class Highscore(models.Model):
         unique_together = ('game', 'player')
 
 class Order(models.Model):
-    #buyer 
+    # Choices for status 
+    OPENED_PAYMENT = 'OP'
+    ACCEPTED_PAYMENT = 'AP'
+    CANCELED_PAYMENT = 'CAN'
+    SUCCESFULL_PAYMENT = 'SUC'
+    FAILED_PAYMENT = 'FAI'
+    STATUS_CHOICES = (
+        (OPENED_PAYMENT, "Proceeded to pay"),
+        (ACCEPTED_PAYMENT, "Accepted payment"),
+        (CANCELED_PAYMENT, "Canceled payment"),
+        (SUCCESFULL_PAYMENT, "Succesfull payment"),
+        (FAILED_PAYMENT, "Failed payment"),
+    )
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    #bought games 
+    status = models.CharField(choices = STATUS_CHOICES, default=OPENED_PAYMENT, max_length=20) 
     games = models.ManyToManyField(Game)
+    session_key = models.CharField(max_length=500)
     total = models.FloatField(default=0, null=False)   

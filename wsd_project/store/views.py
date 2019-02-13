@@ -1,7 +1,7 @@
 ''' Write views here '''
 from hashlib import md5
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views import generic
 from .forms import NewGameForm
@@ -61,6 +61,10 @@ def cart(request):
        request.session['cart'] = []
     
     user_cart = request.session['cart']
+    empty_flag = False
+    if not user_cart:
+        empty_flag = True
+
     games = []
     prices = []
     total = 0
@@ -69,41 +73,94 @@ def cart(request):
         games.append(game)
         total += game.price
         prices.append(game.price)
-    
     games_and_prices = zip(games, prices)
-    current_user = request.user
+    
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
-    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'games_and_prices': games_and_prices})
+    return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
+@login_required
+def confirm_payment(request):
+    if 'cart' not in request.session:
+        return redirect('cart')
+    
+    user_cart = request.session['cart']
+    total = 0    
+    for game_id in user_cart:
+        game = Game.objects.get(pk=game_id)
+        total += game.price
+    
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksum = md5(checksumstr.encode("ascii")).hexdigest()
+    
+    if request.method == 'POST':
+        if checksum == request.POST.get("checksum"):
+            order = Order.objects.create(user=request.user)
+            user_cart = request.session['cart']
+            order.total = total
+            order.session_key = request.session.session_key
+            order.save()
+            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
+        return HttpResponseForbidden() 
+    
+    return render(request, 'store/home.html')
+
+@login_required
 def payment_success(request):
     # calculate checksum
     checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
-    if (checksum == request.GET.get("checksum")):
+    if (checksum == request.GET.get("checksum") and request.GET.get("result") == "success"):
         # delete cart from session
-        # add order to db
-        # add games to user
-        order = Order.objects.create(user=request.user)
+        # set order status to succcess
         user_cart = request.session['cart']
-        order_total = 0
         del request.session['cart']
+
+        order = Order.objects.get(session_key=request.session.session_key)
+        order.status = order.SUCCESFULL_PAYMENT
+        order.save()
+        
+        # add games to user
         for game_id in user_cart:
             game = Game.objects.get(pk=game_id)
             highscore = Highscore(player=request.user, game=game)
             highscore.save()
-            order_total += game.price
-            order.games.add(game)
-        order.total = order_total
-        order.save()
+
+        request.session.cycle_key()
         return render(request, 'store/payment_success.html')
-    return render(request, 'store/payment_error.html')
+    return HttpResponseForbidden()
 
+@login_required
 def payment_cancel(request):
-    return render(request, 'store/payment_cancel.html')
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksum = md5(checksumstr.encode("ascii")).hexdigest()
+    if (checksum == request.GET.get("checksum") and request.GET.get("result") == "cancel"):
+        user_cart = request.session['cart']
+        del request.session['cart']
 
+        order = Order.objects.get(session_key=request.session.session_key)
+        order.status = order.CANCELED_PAYMENT
+        order.save()
+
+        request.session.cycle_key()
+        return render(request, 'store/payment_cancel.html')
+    return HttpResponseForbidden()
+
+@login_required
 def payment_error(request):
-    return render(request, 'store/payment_error.html')
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksum = md5(checksumstr.encode("ascii")).hexdigest()
+    if (checksum == request.GET.get("checksum") and request.GET.get("result") == "error"):
+        user_cart = request.session['cart']
+        del request.session['cart']
+
+        order = Order.objects.get(session_key=request.session.session_key)
+        order.status = order.FAILED_PAYMENT
+        order.save()
+        
+        request.session.cycle_key()
+        return render(request, 'store/payment_error.html')
+    return HttpResponseForbidden()
 
 #what other constraints are needed (cant add highscores without playing, the player actually owns the game)
 #the game field in the highscores is a foreign key -> the primary key of the game

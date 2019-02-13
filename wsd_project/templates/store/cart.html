@@ -17,22 +17,16 @@
             </tr>
         {% endfor %}
         </tbody>
-    </table>
-
-    <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
-        <input type="hidden" name="pid" value="{{ cart_id }}" />
-        <input type="hidden" name="sid" value="wsd18store" />
-        <input type="hidden" name="success_url"
-                value="http://localhost:8000/payment/success" />
-        <input type="hidden" name="cancel_url"
-                value="http://localhost:8000/payment/cancel" />
-        <input type="hidden" name="error_url"
-                value="http://localhost:8000/payment/error" />
-        <input type="hidden" name="checksum"
+        {% if not empty_flag%}
+        <form action="{% url 'confirm' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="checksum"
                 value= "{{ checksum }}" />
-
-        <label for="id_amount">Amount:</label>
-        <input type="text" id="id_amount" name="amount" value="{{ total }}" readonly/>
-        <input class="btn btn-outline-light" type="submit" value="Accept Payment"/>
-    </form>
+            
+            <label for="id_amount">Amount:</label>
+            <input class="btn btn-outline-light" type="submit" value="Proceed to payment"/>
+        </form>
+        {{ total }}
+        {% endif %}
+    </table>
 {% endblock %}
