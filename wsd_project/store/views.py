@@ -135,9 +135,32 @@ def startgame(request, game_pk):
             return redirect('my_library')#should it be mylibrary.html
 
     if request.method == 'POST':
-        #vnuhfrfvbnf
-        print("POST REQUEST CATCHED")
-        return redirect('my_library')
+        #ajax request so the html response isn't rendered
+        requesttype = request.POST.get('messagetype')
+
+        if requesttype == "SCORE":
+            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
+
+            newscore = int(request.POST.get('score'))
+            currentscore = highscoreobj.score
+            if newscore > currentscore:
+                highscoreobj.score = newscore
+                highscoreobj.save()
+                return HttpResponse(status=204)#204 request processed, but no content
+
+        elif requesttype == "SAVE":
+            print(request.POST.get('score'))
+            return HttpResponse(status=204)
+
+        elif requesttype == "LOAD":
+            print(request.POST.get('score'))
+            return HttpResponse(status=204)
+
+        elif requesttype == "ERROR":
+            print(request.POST.get('score'))
+            return HttpResponse(status=204)
+        else:
+            return HttpResponse(status=400)#400 bad request
     else:
         return redirect('my_library')
         

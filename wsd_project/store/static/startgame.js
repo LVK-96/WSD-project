@@ -69,11 +69,10 @@ $(document).ready(function() {
             else if(event.data.messageType == "SCORE"){
                 console.log("score received");
                 var score = event.data.score;
-                //the game number is currently hardcoded - due to change
+                //the url does not need to be specified - it is by default the address of the html that launches the script 
                 $.ajax({
                     type: "POST",
-                    url: "http://127.0.0.1:8000/library/startgame/1",
-                    data: "data-string"
+                    data: {'messagetype' : "SCORE", 'score' : score}
                     });
                 //make a ajax POST REQUEST to the view 
             }
