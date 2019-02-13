@@ -6,11 +6,11 @@
         <input type="hidden" name="pid" value="{{ cart_id }}" />
         <input type="hidden" name="sid" value="wsd18store" />
         <input type="hidden" name="success_url"
-                value="http://localhost:8000/payment/success" />
+                value="{{ PAYMENT_SUCCESS_URL }}" />
         <input type="hidden" name="cancel_url"
-                value="http://localhost:8000/payment/cancel" />
+                value="{{ PAYMENT_CANCEL_URL }}" />
         <input type="hidden" name="error_url"
-                value="http://localhost:8000/payment/error" />
+                value="{{ PAYMENT_ERROR_URL }}" />
         <input type="hidden" name="checksum"
                 value= "{{ checksum }}" />
 

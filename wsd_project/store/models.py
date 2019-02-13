@@ -1,7 +1,5 @@
 from django.db import models
 from users.models import CustomUser
-
-
 #primary key -> can't be changed afterwards, name does not need to be set as a primary key
 
 class Game(models.Model):
@@ -38,4 +36,4 @@ class Order(models.Model):
     status = models.CharField(choices = STATUS_CHOICES, default=OPENED_PAYMENT, max_length=20) 
     games = models.ManyToManyField(Game)
     session_key = models.CharField(max_length=500)
-    total = models.FloatField(default=0, null=False)   
+    total = models.FloatField(default=0, null=False)

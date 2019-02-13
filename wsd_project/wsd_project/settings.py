@@ -18,14 +18,34 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '0irbi1%r19s0i!ycb!9-7@nvw6xtq8k$-3xhd7e^8z0drni!uk'
+if os.getenv('SECRET_KEY'):
+    SECRET_KEY = os.getenv('SECRET_KEY')
+else:
+    SECRET_KEY = '0irbi1%r19s0i!ycb!9-7@nvw6xtq8k$-3xhd7e^8z0drni!uk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv('DEBUG'):
+    DEBUG = False
+else:
+    DEBUG = True
+
+
+if os.getenv('PAYMENT_SUCCESS_URL'):
+    PAYMENT_SUCCESS_URL = os.getenv('PAYMENT_SUCCESS_URL')
+else:
+    PAYMENT_SUCCESS_URL = 'http://127.0.0.1:8000/payment/success'
+
+if os.getenv('PAYMENT_CANCEL_URL'):
+    PAYMENT_CANCEL_URL = os.getenv('PAYMENT_CANCEL_URL')
+else:
+    PAYMENT_CANCEL_URL = 'http://127.0.0.1:8000/payment/cancel'
+
+if os.getenv('PAYMENT_ERROR_URL'):
+    PAYMENT_ERROR_URL = os.getenv('PAYMENT_ERROR_URL')
+else:
+    PAYMENT_ERROR_URL = 'http://127.0.0.1:8000/payment/error'
 
 ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsd_project.wsgi.application'
 
-
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.sqlite3',
@@ -107,8 +126,15 @@ AUTHENTICATION_BACKENDS = (
  'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='538988683043-6v2g2t3c1bpd039rn6vv4fvbr3hh8oe2.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'ojJRE1pmjr5SBY9D_il90tKI' #Paste Secret Key
+if os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY'):
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+else:
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='538988683043-6v2g2t3c1bpd039rn6vv4fvbr3hh8oe2.apps.googleusercontent.com'  #Paste CLient Key
+
+if os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET'):
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+else:
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'ojJRE1pmjr5SBY9D_il90tKI' #Paste Secret Key
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/

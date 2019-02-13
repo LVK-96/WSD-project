@@ -8,6 +8,7 @@ from .forms import NewGameForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import Order, Highscore, Game
+from django.conf import settings
 #from django.utils.decorators import method_decorator
 
 # Create your views here.
@@ -30,6 +31,7 @@ def store(request):
 def highscores(request):
     return render(request, 'store/highscores.html')
 
+@login_required
 def my_library(request):
     #In highscores foreign keys are saved as
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
@@ -53,6 +55,29 @@ def addgame(request):
         return render(request, 'store/addgame.html', {'form': form})
     else:
         return redirect('profilepage')
+
+@login_required
+def developer_panel(request):
+    if not request.user.isdev():
+        return HttpResponseForbidden
+    
+    devs_games = Game.objects.filter(dev=request.user)
+    return render(request, 'store/dev_panel.html', {'games': devs_games})
+
+@login_required
+def dev_modify_game(request, game_pk):
+    check_game = Game.objecst.get(pk=game_pk)
+    owner = check_game.dev
+
+    if not owner == request.user:
+        return HttpResponseForbidden
+    
+    if request.method == 'POST' and game in request.POST:
+        game = request.POST.get("game")
+        orders = Order.objects.filter(game=game)
+        return render(request, 'store/modify_game.html', {'game': game, 'orders': orders})
+    
+    return redirect('devpanel')
 
 @login_required
 def cart(request):
@@ -100,7 +125,7 @@ def confirm_payment(request):
             order.total = total
             order.session_key = request.session.session_key
             order.save()
-            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key})
+            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden() 
     
     return render(request, 'store/home.html')
@@ -181,7 +206,6 @@ def addhighscore(request, game_pk, new_score):
 
 @login_required
 def startgame(request, game_pk):
-
     if request.method == 'GET':
         if Highscore.objects.filter(player=request.user, game=game_pk):
             #if highscore exists the player owns the game
@@ -220,7 +244,3 @@ def startgame(request, game_pk):
             return HttpResponse(status=400)#400 bad request
     else:
         return redirect('my_library')
-        
-
-    
-
