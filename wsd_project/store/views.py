@@ -66,16 +66,15 @@ def developer_panel(request):
 
 @login_required
 def dev_modify_game(request, game_pk):
-    check_game = Game.objecst.get(pk=game_pk)
+    check_game = Game.objects.get(pk=game_pk)
     owner = check_game.dev
 
     if not owner == request.user:
         return HttpResponseForbidden
     
-    if request.method == 'POST' and game in request.POST:
-        game = request.POST.get("game")
-        orders = Order.objects.filter(game=game)
-        return render(request, 'store/modify_game.html', {'game': game, 'orders': orders})
+    if request.method == 'GET':
+        orders = Order.objects.filter(games=check_game)
+        return render(request, 'store/modify_game.html', {'game': check_game, 'orders': orders})
     
     return redirect('devpanel')
 
@@ -124,6 +123,9 @@ def confirm_payment(request):
             user_cart = request.session['cart']
             order.total = total
             order.session_key = request.session.session_key
+            for game_id in user_cart:
+                game = Game.objects.get(pk=game_id)
+                order.games.add(game)
             order.save()
             return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden() 
@@ -236,7 +238,7 @@ def startgame(request, game_pk):
             highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
             print(newstate)
             highscoreobj.state = newstate
-            highscoreobj.save()
+            highscoreobj.save() 
             return HttpResponse(status=204)
 
         elif requesttype == "LOAD":
