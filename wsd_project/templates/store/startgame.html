@@ -8,6 +8,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
     <script src="{% static 'startgame.js' %}"></script>
+    <!--<script>
+            console.log("RUNNING SCRIPT FOR POST REQUEST")
+            $.ajax({ type: "POST", url: "/library/startgame/1", data: {csrfmiddlewaretoken: '{{ csrf_token }}',}});
+    </script> -->
 </head>
 <h4 id="lib-header">Game</h4>
 <hr>

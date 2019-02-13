@@ -182,11 +182,22 @@ def addhighscore(request, game_pk, new_score):
 @login_required
 def startgame(request, game_pk):
 
-    if Highscore.objects.filter(player=request.user, game=game_pk):
-        #if highscore exists the player owns the game
-        game = Game.objects.get(pk=game_pk)
-        return render(request, 'store/startgame.html', {'game' : game})
+    if request.method == 'GET':
+        if Highscore.objects.filter(player=request.user, game=game_pk):
+            #if highscore exists the player owns the game
+            game = Game.objects.get(pk=game_pk)
+            return render(request, 'store/startgame.html', {'game' : game})
+        else:
+            #if highscore doesn't exist, the player doesn't own the game
+            return redirect('my_library')#should it be mylibrary.html
+
+    if request.method == 'POST':
+        #vnuhfrfvbnf
+        print("POST REQUEST CATCHED")
+        return redirect('my_library')
     else:
-        #if highscore doesn't exist, the player doesn't own the game
-        return redirect('my_library')#should it be mylibrary.html
+        return redirect('my_library')
+        
+
+    
 
