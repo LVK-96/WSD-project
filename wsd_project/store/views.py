@@ -228,9 +228,15 @@ def startgame(request, game_pk):
                 highscoreobj.score = newscore
                 highscoreobj.save()
                 return HttpResponse(status=204)#204 request processed, but no content
+            else:
+                return HttpResponse(status=204)
 
         elif requesttype == "SAVE":
-            print(request.POST.get('score'))
+            newstate = request.POST.get('gamestate')
+            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
+            print(newstate)
+            highscoreobj.state = newstate
+            highscoreobj.save()
             return HttpResponse(status=204)
 
         elif requesttype == "LOAD":
@@ -238,8 +244,8 @@ def startgame(request, game_pk):
             return HttpResponse(status=204)
 
         elif requesttype == "ERROR":
-            print(request.POST.get('score'))
-            return HttpResponse(status=204)
+            print("error")
+            return HttpResponse(status=400)
         else:
             return HttpResponse(status=400)#400 bad request
     else:

@@ -77,8 +77,13 @@ $(document).ready(function() {
                 //make a ajax POST REQUEST to the view 
             }
             else if(event.data.messageType == "SAVE"){
+                //save the gamestate to the service
                 console.log("save request received");
-                //to save the gamestate to the service
+                var gamestate = JSON.stringify(event.data.gameState);
+                $.ajax({
+                    type: "POST",
+                    data: {'messagetype' : "SAVE", 'gamestate' : gamestate}
+                    });
             }
             else if(event.data.messageType == "LOAD_REQUEST"){
                 console.log("load request received");

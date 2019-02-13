@@ -15,6 +15,7 @@ class Highscore(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     player = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     score = models.IntegerField(default=0, unique=False)
+    state = models.TextField(default="")
     class Meta:
         unique_together = ('game', 'player')
 
