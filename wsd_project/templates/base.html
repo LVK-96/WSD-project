@@ -142,6 +142,9 @@
                     <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
                     <a class="nav-item nav-link" href="{% url 'my_library' %}">My library</a>
                     <a class="nav-item nav-link" href="{% url 'highscores' %}">Highscores</a>
+                    {% if user.is_dev %}
+                    <a class="nav-item nav-link" href="{% url 'devpanel' %}">Developer panel</a>
+                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
                                         <a class="nav-item nav-link" href="{% url 'cart' %}"><span class="fas fa-shopping-cart"></span> Cart</a>

@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+    <h2>Modify game</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Save changes</button>
+    </form>
     {% for order in orders %}
         <p>{{ game.name }}</p>
         <p>{{ order.total }}</p>

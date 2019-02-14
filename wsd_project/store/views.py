@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views import generic
-from .forms import NewGameForm
+from .forms import NewGameForm, GameUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .models import Order, Highscore, Game
@@ -69,14 +69,18 @@ def dev_modify_game(request, game_pk):
     check_game = Game.objects.get(pk=game_pk)
     owner = check_game.dev
 
-    if not owner == request.user:
-        return HttpResponseForbidden
-    
-    if request.method == 'GET':
+    if owner == request.user:
         orders = Order.objects.filter(games=check_game)
-        return render(request, 'store/modify_game.html', {'game': check_game, 'orders': orders})
+        if request.method == 'POST':
+            form = GameUpdateForm(request.POST, instance=check_game)
+            if form.is_valid():
+                form.save()
+                return redirect('modify', game_pk=game_pk)
+        else:
+            form = GameUpdateForm(instance=check_game)
+            return render(request, 'store/modify_game.html', {'form': form, 'game': check_game, 'orders': orders})
     
-    return redirect('devpanel')
+    return HttpResponseForbidden
 
 @login_required
 def cart(request):
