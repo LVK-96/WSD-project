@@ -6,10 +6,15 @@ from django.template import loader
 from django.views import generic
 from .forms import NewGameForm, GameUpdateForm
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Order, Highscore, Game
 from django.conf import settings
 #from django.utils.decorators import method_decorator
+
+user_login_required = user_passes_test(lambda user: user.is_active, login_url='/')
+def active_user_required(view_func):
+    decorated_view_func = login_required(user_login_required(view_func))
+    return decorated_view_func
 
 # Create your views here.
 def index(request):
@@ -31,14 +36,14 @@ def store(request):
 def highscores(request):
     return render(request, 'store/highscores.html')
 
-@login_required
+@active_user_required
 def my_library(request):
     #In highscores foreign keys are saved as
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
     allgames = Game.objects.all()
     return render(request, 'store/my_library.html', {'myhighscores': myhighscores, 'allgames': allgames})
 
-@login_required
+@active_user_required
 def addgame(request):
     if request.user.isdev():
         if request.method == 'POST':
@@ -56,7 +61,7 @@ def addgame(request):
     else:
         return redirect('profilepage')
 
-@login_required
+@active_user_required
 def developer_panel(request):
     if not request.user.isdev():
         return HttpResponseForbidden
@@ -64,7 +69,7 @@ def developer_panel(request):
     devs_games = Game.objects.filter(dev=request.user)
     return render(request, 'store/dev_panel.html', {'games': devs_games})
 
-@login_required
+@active_user_required
 def dev_modify_game(request, game_pk):
     check_game = Game.objects.get(pk=game_pk)
     owner = check_game.dev
@@ -82,7 +87,7 @@ def dev_modify_game(request, game_pk):
     
     return HttpResponseForbidden
 
-@login_required
+@active_user_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
     if 'cart' not in request.session:
@@ -107,7 +112,7 @@ def cart(request):
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
-@login_required
+@active_user_required
 def confirm_payment(request):
     if 'cart' not in request.session:
         return redirect('cart')
@@ -136,7 +141,7 @@ def confirm_payment(request):
     
     return render(request, 'store/home.html')
 
-@login_required
+@active_user_required
 def payment_success(request):
     # calculate checksum
     checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
@@ -161,7 +166,7 @@ def payment_success(request):
         return render(request, 'store/payment_success.html')
     return HttpResponseForbidden()
 
-@login_required
+@active_user_required
 def payment_cancel(request):
     checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
@@ -177,7 +182,7 @@ def payment_cancel(request):
         return render(request, 'store/payment_cancel.html')
     return HttpResponseForbidden()
 
-@login_required
+@active_user_required
 def payment_error(request):
     checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
@@ -198,7 +203,7 @@ def payment_error(request):
 #a new highscore, with the minimum score should be added when a player purchases the game - this can be used
 #to tell if a player has puirchased a specific game
 
-@login_required
+@active_user_required
 def addhighscore(request, game_pk, new_score):
     if request.method == 'POST':
         if Highscore.objects.filter(player=request.user, game=game_pk):
@@ -210,7 +215,7 @@ def addhighscore(request, game_pk, new_score):
             Highscore.objects.create(game=game_pk, player = request.user, score = new_score)
     return redirect('profilepage')
 
-@login_required
+@active_user_required
 def startgame(request, game_pk):
     if request.method == 'GET':
         if Highscore.objects.filter(player=request.user, game=game_pk):

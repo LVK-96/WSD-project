@@ -8,6 +8,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(blank=True, unique=True ,null=True, max_length=150)
     is_dev = models.BooleanField(default = False)
+    is_active = models.BooleanField(default=True)
     def isdev(self):
         if (self.is_dev):
             return True

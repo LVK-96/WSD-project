@@ -149,6 +149,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+
+if os.getenv('EMAIL_HOST_USER'):
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USERNAME') 
+else:
+    EMAIL_HOST_USER = 'app119607950@heroku.com'
+
+if os.getenv('EMAIL_HOST_PASSWORD'):
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+else:
+    EMAIL_HOST_PASSWORD = 'oaepgzhz4672'
+
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
