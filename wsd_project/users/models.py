@@ -9,11 +9,6 @@ class CustomUser(AbstractUser):
     username = models.CharField(blank=True, unique=True ,null=True, max_length=150)
     is_dev = models.BooleanField(default = False)
     is_active = models.BooleanField(default=True)
-    def isdev(self):
-        if (self.is_dev):
-            return True
-        else:
-            return False
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)

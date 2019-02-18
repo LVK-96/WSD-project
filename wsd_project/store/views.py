@@ -54,7 +54,7 @@ def highscores(request):
 @active_user_required
 def my_library(request):
     #In highscores foreign keys are saved as
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
     allgames = Game.objects.all()
@@ -62,14 +62,13 @@ def my_library(request):
 
 @active_user_required
 def addgame(request):
-    if request.user.isdev():
+    if request.user.is_dev:
         if request.method == 'POST':
             form = NewGameForm(request.POST)
             if form.is_valid():
                 game = form.save(commit = False)
                 game.dev = request.user
                 game.save()
-
                 return redirect('devpanel')
         else:
             form = NewGameForm()
@@ -80,7 +79,7 @@ def addgame(request):
 
 @active_user_required
 def developer_panel(request):
-    if not request.user.isdev():
+    if not request.user.is_dev:
         return HttpResponseForbidden
 
     devs_games = Game.objects.filter(dev=request.user)
@@ -111,7 +110,6 @@ def dev_modify_game(request, game_pk):
     owner = check_game.dev
 
     if owner == request.user:
-        orders = Order.objects.filter(games=check_game)
         if request.method == 'POST':
             form = GameUpdateForm(request.POST, instance=check_game)
             if form.is_valid():
@@ -119,14 +117,14 @@ def dev_modify_game(request, game_pk):
                 return redirect('modify', game_pk=game_pk)
         else:
             form = GameUpdateForm(instance=check_game)
-            return render(request, 'store/modify_game.html', {'form': form, 'game': check_game, 'orders': orders})
+            return render(request, 'store/modify_game.html', {'form': form, 'game': check_game})
 
     return HttpResponseForbidden
 
 @active_user_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
 
     if 'cart' not in request.session:
@@ -246,7 +244,7 @@ def payment_error(request):
 
 @active_user_required
 def startgame(request, game_pk):
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
 
     if request.method == 'GET':
