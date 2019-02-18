@@ -25,16 +25,38 @@ def index(request):
 
 def store(request):
     allgames = Game.objects.all()
-    response = render(request, 'store/store.html', {'allgames': allgames})
+    tags = Game.objects.all().first().GENRE_CHOISES
+    flag = 0
+
     if request.method == 'POST':
-        if 'cart' not in request.session:
-            request.session['cart'] = []
-        user_cart = request.session['cart']
-        highscores = Highscore.objects.filter(game = Game.objects.get(pk = request.POST.get("id")), player = request.user)
-        if request.POST.get("id") not in user_cart and not highscores: # No duplicate items in cart and user does not already own game
-            user_cart.append(request.POST.get("id"))
-        request.session['cart'] = user_cart
-    return response
+        if request.POST.get('messagetype') == 'cart':
+            if 'cart' not in request.session:
+                request.session['cart'] = []
+            user_cart = request.session['cart']
+            highscores = Highscore.objects.filter(game = Game.objects.get(pk = request.POST.get("id")), player = request.user)
+            if request.POST.get("id") not in user_cart and not highscores: # No duplicate items in cart and user does not already own game
+                user_cart.append(request.POST.get("id"))
+            request.session['cart'] = user_cart
+        elif request.POST.get('messagetype') == 'filter':
+            tagstoshow = []
+            for key, value in request.POST.items():
+                #make the chosen tags into a list
+                if(key != 'csrfmiddlewaretoken' and key != 'messagetype' and key != 'filter'):
+                    tagstoshow.append(key)
+            #filter allgames using the tags in the values
+            allgames = allgames.filter(genre__in=tagstoshow)
+        elif request.POST.get('messagetype') == 'search':
+            #check if game with that name exists
+            name = Game.objects.filter(name=request.POST.get('search'))
+            if name:
+                allgames = name
+            else:
+                #to tell the template that game with that name was not found
+                flag = 1
+            
+                
+
+    return render(request, 'store/store.html', {'allgames': allgames, 'tags': tags, 'flag': flag})
 
 def highscores(request):
     largesthighscore = Highscore.objects.values('game').annotate(max_score=Max('score'))
@@ -43,9 +65,12 @@ def highscores(request):
 
     for item in largesthighscore:
         game_name = Game.objects.all().get(pk = item["game"]).name
-        user_object = Highscore.objects.get(game = item["game"], score = item["max_score"]).player
-        user_name = user_object.username
-        context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_name })
+        user_queryset = Highscore.objects.filter(game = item["game"], score = item["max_score"])
+        user_names = []
+        for user_object in user_queryset:
+            user_names.append(user_object.player.username)
+        print(user_names)
+        context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_names })
     
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
 
@@ -266,12 +291,12 @@ def startgame(request, game_pk):
             if requesttype == "SCORE":
                 newscore = int(request.POST.get('score'))
                 currentscore = highscoreobj.score
-            if newscore > currentscore:
-                highscoreobj.score = newscore
-                highscoreobj.save()
-                return HttpResponse(status=204)#204 request processed, but no content
-            else:
-                return HttpResponse(status=204)
+                if newscore > currentscore:
+                    highscoreobj.score = newscore
+                    highscoreobj.save()
+                    return HttpResponse(status=204)#204 request processed, but no content
+                else:
+                    return HttpResponse(status=204)
 
             elif requesttype == "SAVE":
                 newstate = request.POST.get('gamestate')
