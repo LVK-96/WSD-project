@@ -11,7 +11,30 @@ class Game(models.Model):
     link = models.URLField(unique=True, default="", null=False)
     description = models.TextField(default='', max_length=1000)
     #purchases = models.integerField(default=0)#when adding a new game should always be set to 0
-    #tags = dictionary
+    #choises for genres
+    RACING='RA'
+    ARCADE='AR'
+    ADVENTURE='AD'
+    ACTION='AC'
+    FANTASY='FA'
+    STRATEGY='ST'
+    SPORTS='SP'
+    TRIVIA='TR'
+    PUZZLE='PU'
+    OTHER='OT'
+    GENRE_CHOISES = (
+        (ACTION, 'Action'),
+        (ADVENTURE, 'Adventure'),
+        (ARCADE, 'Arcade'),
+        (FANTASY, 'Fantacy'),
+        (PUZZLE, 'Puzzle'),
+        (RACING, 'Racing'),
+        (SPORTS, 'Sports'),
+        (STRATEGY, 'Strategy'),
+        (TRIVIA, 'Trivia'),
+        (OTHER, 'Other'),
+    )
+    genre = models.CharField(max_length=2, choices = GENRE_CHOISES, default=OTHER)
 
 class Highscore(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
