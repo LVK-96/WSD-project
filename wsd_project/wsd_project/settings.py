@@ -25,7 +25,7 @@ else:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.getenv('DEBUG'):
-    DEBUG = True
+    DEBUG = False
 else:
     DEBUG = True
 
