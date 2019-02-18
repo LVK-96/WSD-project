@@ -15,7 +15,9 @@
                     {% if game.id == highscore.game_id %}
                         <div class="col-lg-4 col-md-6 col-sm-12" id="store">
                             <div class="card bg-dark mx-auto" style="width: 16rem;">
-                                <h4 class="card-title">{{ game.name }}</h4>
+                                <a href="{% url 'gamedescription' game.id %}" style="color:inherit;">
+                                    <h4 class="card-title">{{ game.name }}</h4>
+                                </a>
                                 <div class="card-text">
                                     <a class="btn btn-secondary btn-lg" href="{% url 'startgame' game.id %}">
                                         Play
