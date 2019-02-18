@@ -9,7 +9,7 @@ class Game(models.Model):
     dev = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     price = models.FloatField(default=0)
     link = models.URLField(unique=True, default="", null=False)
-    description = models.CharField(default='', max_length=1000)
+    description = models.TextField(default='', max_length=1000)
     #purchases = models.integerField(default=0)#when adding a new game should always be set to 0
     #tags = dictionary
 
