@@ -9,7 +9,7 @@
                 <div class="card bg-dark mx-auto" style="width: 16rem;">
                     {% load staticfiles %}
                     <a href="{% url 'gamedescription' game.id %}">
-                        <img class="card-img-top" src="{% static 'game_store.png' %}" alt="game image">
+                        <img class="card-img-top" src="{% static 'default_game.jpg' %}" alt="game image">
                     </a>
                     <a href= "{% url 'gamedescription' game.id %}" style="color:inherit;">
                         <h4 class="card-title">{{game.name}}</h4>
