@@ -259,13 +259,15 @@ def startgame(request, game_pk):
             return redirect('my_library')#should it be mylibrary.html
 
     if request.method == 'POST':
-        #ajax request so the html response isn't rendered
-        requesttype = request.POST.get('messagetype')
-        highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
+        #test that user owns the game
+        if Highscore.objects.filter(player=request.user, game=game_pk):
+            #ajax request so the html response isn't rendered
+            requesttype = request.POST.get('messagetype')
+            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
 
-        if requesttype == "SCORE":
-            newscore = int(request.POST.get('score'))
-            currentscore = highscoreobj.score
+            if requesttype == "SCORE":
+                newscore = int(request.POST.get('score'))
+                currentscore = highscoreobj.score
             if newscore > currentscore:
                 highscoreobj.score = newscore
                 highscoreobj.save()
@@ -273,19 +275,21 @@ def startgame(request, game_pk):
             else:
                 return HttpResponse(status=204)
 
-        elif requesttype == "SAVE":
-            newstate = request.POST.get('gamestate')
-            highscoreobj.state = newstate
-            highscoreobj.save()
-            return HttpResponse(status=204)
+            elif requesttype == "SAVE":
+                newstate = request.POST.get('gamestate')
+                highscoreobj.state = newstate
+                highscoreobj.save()
+                return HttpResponse(status=204)
 
-        elif requesttype == "LOAD_REQUEST":
-            return JsonResponse({'state': highscoreobj.state})
+            elif requesttype == "LOAD_REQUEST":
+                return JsonResponse({'state': highscoreobj.state})
 
-        elif requesttype == "ERROR":
-            return HttpResponse(status=400)
+            elif requesttype == "ERROR":
+                return HttpResponse(status=400)
+            else:
+                return HttpResponse(status=400)#400 bad request
         else:
-            return HttpResponse(status=400)#400 bad request
+            redirect('my_library')
     else:
         return redirect('my_library')
 
