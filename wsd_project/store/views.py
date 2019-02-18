@@ -69,7 +69,6 @@ def highscores(request):
         user_names = []
         for user_object in user_queryset:
             user_names.append(user_object.player.username)
-        print(user_names)
         context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_names })
     
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
@@ -126,7 +125,7 @@ def order_history(request, game_pk):
                     prices.append(price)
         dates_and_prices = zip(dates, prices)
         return render(request, 'store/order_history.html', {'dates_and_prices': dates_and_prices, 'game': check_game})
-    
+
     return HttpResponseForbidden
 
 @active_user_required
@@ -156,6 +155,13 @@ def cart(request):
        request.session['cart'] = []
 
     user_cart = request.session['cart']
+    if request.method == 'POST':
+        print("asd")
+        game_id = request.POST.get("game_id")
+        if game_id in user_cart:
+            user_cart.remove(game_id)
+            request.session['cart'] = user_cart
+    
     empty_flag = False
     if not user_cart:
         empty_flag = True
@@ -188,8 +194,8 @@ def confirm_payment(request):
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
-    if request.method == 'POST':
-        if checksum == request.POST.get("checksum"):
+    if request.method == 'GET':
+        if checksum == request.GET.get("checksum"):
             order = Order.objects.create(user=request.user)
             user_cart = request.session['cart']
             order.total = total
@@ -297,7 +303,10 @@ def startgame(request, game_pk):
                     return HttpResponse(status=204)#204 request processed, but no content
                 else:
                     return HttpResponse(status=204)
+<<<<<<< HEAD
 
+=======
+>>>>>>> e85e833d2f5db03a17a20d782ff0e1faafa5989c
             elif requesttype == "SAVE":
                 newstate = request.POST.get('gamestate')
                 highscoreobj.state = newstate

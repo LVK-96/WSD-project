@@ -1,6 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<head>
+    {% load staticfiles %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+    
+    $(document).ready(function() {
+    // Listen to click event on the submit button
+        $("form[name=add_to_cart]").submit(function (e) {     
+            e.preventDefault();
+            var form = $(this).closest('form');
+            $.post(window.location.href, form.serialize())
+        });
+    });
+    </script>
+</head>
 <h4 id="lib-header">Store</h4>
 <hr>
 
@@ -44,7 +58,7 @@
                         <span class="badge badge-pill badge-success" style="font-size: 1rem;">{{ game.price }}€</span>
                     </p>
                     {% if user.is_authenticated and not user.is_dev %}
-                    <form method="POST">
+                    <form method="POST" name="add_to_cart">
                         {% csrf_token %}
                         <input type="hidden" name="messagetype" value="cart">
                         <input type="hidden" name="id" value="{{ game.id }}" />
