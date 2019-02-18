@@ -7,7 +7,13 @@
         {% for game in allgames %}
             <div class="col-lg-4 col-md-6 col-sm-12" id="store">
                 <div class="card bg-dark mx-auto" style="width: 16rem;">
-                    <h4 class="card-title">{{game.name}}</h4>
+                    {% load staticfiles %}
+                    <a href="{% url 'gamedescription' game.id %}">
+                        <img class="card-img-top" src="{% static 'game_store.png' %}" alt="game image">
+                    </a>
+                    <a href= "{% url 'gamedescription' game.id %}" style="color:inherit;">
+                        <h4 class="card-title">{{game.name}}</h4>
+                    </a>
                     <p class="card-text">
                         <span class="badge badge-pill badge-success" style="font-size: 1rem;">{{ game.price }}€</span>
                     </p>
