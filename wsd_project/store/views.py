@@ -11,7 +11,6 @@ from .models import Order, Highscore, Game
 from users.models import CustomUser
 from django.conf import settings
 from django.db.models.aggregates import Max
-import json
 #from django.utils.decorators import method_decorator
 
 user_login_required = user_passes_test(lambda user: user.is_active, login_url='/')
@@ -155,7 +154,7 @@ def cart(request):
         prices.append(game.price)
     games_and_prices = zip(games, prices)
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
@@ -170,7 +169,7 @@ def confirm_payment(request):
         game = Game.objects.get(pk=game_id)
         total += game.price
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
     if request.method == 'GET':
