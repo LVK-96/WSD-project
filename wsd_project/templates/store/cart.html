@@ -18,15 +18,15 @@
             </tr>
         {% endfor %}
         </tbody>
-        </table>
-        <form action="{% url 'confirm' %}" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="checksum"
-                value= "{{ checksum }}" />
+    </table>
+    <form action="{% url 'confirm' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="checksum"
+            value= "{{ checksum }}" />
 
-            <label for="id_amount"><b>Total:</b> {{ total }}€</label>
-            <input class="btn btn-outline-light" type="submit" value="Proceed to payment"/>
-        </form>
+        <label for="id_amount"><b>Total:</b> {{ total }}€</label>
+        <input class="btn btn-outline-light" type="submit" value="Proceed to payment"/>
+    </form>
     {% endif %}
         {% if empty_flag %}
         <p class="font-weight-light" style="font-size: 1.5rem;">Your cart is empty. Go to <a href="{% url 'store' %}" style="color: rgb(191, 191, 191);">Store</a> to browse games.</p>
