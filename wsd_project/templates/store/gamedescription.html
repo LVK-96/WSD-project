@@ -6,11 +6,10 @@
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12">
             {% load staticfiles %}
-            <img class="img-fluid w-75" src="{% static 'default_game.jpg' %}" alt="game image" title="{{game.name}}" style="margin-bottom:20px;">
+            <img class="img-fluid w-75" src="{% static 'default_game.jpg' %}" alt="game image" title="{{game.name}}" style="margin-bottom:25px;">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
-            <h6><b>Description</b></h6>
-            <br>
+            <h6 style="margin-bottom: 15px;"><b>Description</b></h6>
             <p class="font-weight-light">{{ game.description }}</p>
         </div>
     </div>
