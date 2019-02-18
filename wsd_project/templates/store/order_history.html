@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+Order history for {{ game.name }}
+<br>
+{% for date, price in dates_and_prices %}
+<tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
+    <td>{{ date}}</td>
+    <td>{{ price }}€</td>
+</tr>  
+{% endfor %}          
+{% endblock %}

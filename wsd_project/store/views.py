@@ -1,7 +1,7 @@
 ''' Write views here '''
 from hashlib import md5
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.template import loader
 from django.views import generic
 from .forms import NewGameForm, GameUpdateForm
@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Order, Highscore, Game
 from django.conf import settings
+import json
 #from django.utils.decorators import method_decorator
 
 user_login_required = user_passes_test(lambda user: user.is_active, login_url='/')
@@ -68,6 +69,25 @@ def developer_panel(request):
 
     devs_games = Game.objects.filter(dev=request.user)
     return render(request, 'store/dev_panel.html', {'games': devs_games})
+
+@active_user_required
+def order_history(request, game_pk):
+    check_game = Game.objects.get(pk=game_pk)
+    owner = check_game.dev
+
+    if owner == request.user:
+        orders = Order.objects.filter(games=check_game)
+        dates = []
+        prices = []
+        for order in orders:
+            for game_name, price in order.decodeJSON(order.games_and_prices).items():
+                if (game_name == check_game.name):
+                    dates.append(order.date)
+                    prices.append(price)
+        dates_and_prices = zip(dates, prices)
+        return render(request, 'store/order_history.html', {'dates_and_prices': dates_and_prices, 'game': check_game})
+    
+    return HttpResponseForbidden
 
 @active_user_required
 def dev_modify_game(request, game_pk):
@@ -132,9 +152,15 @@ def confirm_payment(request):
             user_cart = request.session['cart']
             order.total = total
             order.session_key = request.session.session_key
+            games = []
+            prices = []
             for game_id in user_cart:
                 game = Game.objects.get(pk=game_id)
+                games.append(game.name)
+                prices.append(game.price)
                 order.games.add(game)
+            games_and_prices = dict(zip(games, prices))
+            order.games_and_prices = order.encodeJSON(games_and_prices)
             order.save()
             return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden()
@@ -229,10 +255,9 @@ def startgame(request, game_pk):
     if request.method == 'POST':
         #ajax request so the html response isn't rendered
         requesttype = request.POST.get('messagetype')
+        highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
 
         if requesttype == "SCORE":
-            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
-
             newscore = int(request.POST.get('score'))
             currentscore = highscoreobj.score
             if newscore > currentscore:
@@ -244,15 +269,13 @@ def startgame(request, game_pk):
 
         elif requesttype == "SAVE":
             newstate = request.POST.get('gamestate')
-            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
-            print(newstate)
             highscoreobj.state = newstate
             highscoreobj.save()
             return HttpResponse(status=204)
 
-        elif requesttype == "LOAD":
-            print(request.POST.get('score'))
-            return HttpResponse(status=204)
+        elif requesttype == "LOAD_REQUEST":
+            print(highscoreobj.state)
+            return JsonResponse({'state': highscoreobj.state})
 
         elif requesttype == "ERROR":
             print("error")

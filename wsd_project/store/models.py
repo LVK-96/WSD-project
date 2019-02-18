@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import CustomUser
+import json
 #primary key -> can't be changed afterwards, name does not need to be set as a primary key
 
 class Game(models.Model):
@@ -38,4 +39,18 @@ class Order(models.Model):
     status = models.CharField(choices = STATUS_CHOICES, default=OPENED_PAYMENT, max_length=20)
     games = models.ManyToManyField(Game)
     session_key = models.CharField(max_length=500)
+<<<<<<< HEAD
     total = models.FloatField(default=0, null=False)
+=======
+    games_and_prices = models.TextField()
+    date = models.DateTimeField(auto_now=True)
+    total = models.FloatField(default=0, null=False)
+
+    def encodeJSON(self, games_prices_dict):
+        json_string = json.dumps(games_prices_dict)
+        return json_string
+
+    def decodeJSON(self, json_string):
+        decoded = json.loads(json_string)
+        return decoded
+>>>>>>> 833d5a111115e655896f96d49674f8a815601408
