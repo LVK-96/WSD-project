@@ -83,13 +83,6 @@ a.snake-link:hover {
     background-repeat: no-repeat;
 }
 
-.snake-snakebody-alive {
-   background-image: url('./images/dark-snakeblock.png');
-}
-.snake-snakebody-dead {
-   background-image: url('./images/dead-dark-snakeblock.png');
-}
-
 .snake-food-block {
     margin: 0px;
     padding: 0px;
@@ -115,39 +108,3 @@ a.snake-link:hover {
     background-color: #3E2E44;
     position: relative;
 }
-            
-.snake-welcome-dialog {
-    padding: 8px;
-    margin: 0px;
-    background-color: black;
-    color: #3E2E44;
-    font-family: Verdana, arial, helvetica, sans-serif;
-    font-size: 14px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300px;
-    /*height: 150px;*/
-    margin-top: -100px;
-    margin-left: -158px;
-    text-align: center;
-    display: block;
-}
-
-.snake-try-again-dialog {
-    padding: 8px;
-    margin: 0px;
-    background-color: black;
-    color: #312E44;
-    font-family: Verdana, arial, helvetica, sans-serif;
-    font-size: 14px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300px;
-    height: 100px;
-    margin-top: -75px;
-    margin-left: -158px;
-    text-align: center;
-    display: none;
-    }
