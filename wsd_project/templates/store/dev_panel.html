@@ -20,4 +20,15 @@
     {% endfor%}
     </div>
 </div>
+<h4 id="lib-header" style="text-align: center; padding:0;">Order history</h4>
+<div class="dropdown show">
+    <a class="btn btn-secondary btn-lg dropdown-toggle" href="#" role="button" id="dopdownMenuLink" data-toggle="dropdown" title="Select the game you wish to modify" aria-haspopup="true">Select</a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="background-color:rgb(204, 204, 204);">
+    {% for game in games %}
+        <a class="dropdown-item" href="{% url 'order_history' game.id %}" style="overflow:hidden;">
+            {{ game.name }}
+        </a>
+    {% endfor%}
+    </div>
+</div>
 {% endblock %}

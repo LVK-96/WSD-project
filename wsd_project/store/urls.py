@@ -10,6 +10,7 @@ urlpatterns = [
     path('library/startgame/<int:game_pk>', views.startgame, name='startgame'),
     path('devpanel', views.developer_panel, name='devpanel'),
     path('modify/<int:game_pk>/', views.dev_modify_game, name = 'modify'),
+    path('history/<int:game_pk>/', views.order_history, name = 'order_history'),
     path('highscores', views.highscores, name='highscores'),
     path('addgame', views.addgame, name='addgame'),
     path('cart', views.cart, name='cart'),
@@ -17,5 +18,6 @@ urlpatterns = [
     path('highscore/<int:game_pk>/<int:new_score>', views.addhighscore, name='highscore'),
     path('payment/success', views.payment_success, name='payment_success'),
     path('payment/cancel', views.payment_cancel, name='payment_cancel'),
-    path('payment/error', views.payment_error, name='payment_error')
+    path('payment/error', views.payment_error, name='payment_error'),
+    path('store/gamedescription/<int:game_pk>', views.game_description, name='gamedescription')
 ]
