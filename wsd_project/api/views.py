@@ -50,8 +50,5 @@ def RESTapi(request):
                 users_and_scores = dict(zip(users, scores))
                 users_and_scores_JSON = json.dumps(users_and_scores)
                 return render(request, 'api/REST.html', {'jsonString': users_and_scores_JSON})
-
-            
-
-        
-        
+    
+    return render(request, 'api/REST.html', {'jsonString': " "})
