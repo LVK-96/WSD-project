@@ -54,7 +54,7 @@ def highscores(request):
 @active_user_required
 def my_library(request):
     #In highscores foreign keys are saved as
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
     allgames = Game.objects.all()
@@ -62,7 +62,7 @@ def my_library(request):
 
 @active_user_required
 def addgame(request):
-    if request.user.isdev():
+    if request.user.is_dev:
         if request.method == 'POST':
             form = NewGameForm(request.POST)
             if form.is_valid():
@@ -79,7 +79,7 @@ def addgame(request):
 
 @active_user_required
 def developer_panel(request):
-    if not request.user.isdev():
+    if not request.user.is_dev:
         return HttpResponseForbidden
 
     devs_games = Game.objects.filter(dev=request.user)
@@ -124,7 +124,7 @@ def dev_modify_game(request, game_pk):
 @active_user_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
 
     if 'cart' not in request.session:
@@ -247,7 +247,7 @@ def payment_error(request):
 #to tell if a player has puirchased a specific game
 @active_user_required
 def startgame(request, game_pk):
-    if request.user.isdev:
+    if request.user.is_dev:
         return redirect('index')
 
     if request.method == 'GET':
