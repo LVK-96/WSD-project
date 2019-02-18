@@ -18,5 +18,6 @@ urlpatterns = [
     path('highscore/<int:game_pk>/<int:new_score>', views.addhighscore, name='highscore'),
     path('payment/success', views.payment_success, name='payment_success'),
     path('payment/cancel', views.payment_cancel, name='payment_cancel'),
-    path('payment/error', views.payment_error, name='payment_error')
+    path('payment/error', views.payment_error, name='payment_error'),
+    path('store/gamedescription/<int:game_pk>', views.game_description, name='gamedescription')
 ]

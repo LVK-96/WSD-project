@@ -274,13 +274,18 @@ def startgame(request, game_pk):
             return HttpResponse(status=204)
 
         elif requesttype == "LOAD_REQUEST":
-            print(highscoreobj.state)
             return JsonResponse({'state': highscoreobj.state})
 
         elif requesttype == "ERROR":
-            print("error")
             return HttpResponse(status=400)
         else:
             return HttpResponse(status=400)#400 bad request
     else:
         return redirect('my_library')
+
+
+
+def game_description(request, game_pk):
+    if request.method == 'GET':
+        game = Game.objects.get(pk=game_pk)
+        return render(request, 'store/gamedescription.html', {'game' : game})
