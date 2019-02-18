@@ -292,16 +292,11 @@ def startgame(request, game_pk):
 
 def game_description(request, game_pk):
     if request.method == 'GET':
-<<<<<<< HEAD
-        game = Game.objects.get(pk=game_pk)
-        tophighscores = Highscore.objects.filter(game = game)
-        tophighscores.order_by('score')
-        tophighscores = tophighscores[:10]
-        return render(request, 'store/gamedescription.html', {'game' : game, 'tophighscores': tophighscores})
-=======
         try:
             game = Game.objects.get(pk=game_pk)
-            return render(request, 'store/gamedescription.html', {'game' : game})
+            tophighscores = Highscore.objects.filter(game = game)
+            tophighscores.order_by('score')
+            tophighscores = tophighscores[:10]
+            return render(request, 'store/gamedescription.html', {'game' : game, 'tophighscores': tophighscores})
         except:
             return redirect('store')
->>>>>>> ce3fb1926980111b6f9db5106132a10e50f12b93
