@@ -241,10 +241,7 @@ def payment_error(request):
         return render(request, 'store/payment_error.html')
     return HttpResponseForbidden()
 
-#what other constraints are needed (cant add highscores without playing, the player actually owns the game)
-#the game field in the highscores is a foreign key -> the primary key of the game
-#a new highscore, with the minimum score should be added when a player purchases the game - this can be used
-#to tell if a player has puirchased a specific game
+
 @active_user_required
 def startgame(request, game_pk):
     if request.user.is_dev:
@@ -295,6 +292,9 @@ def game_description(request, game_pk):
     if request.method == 'GET':
         try:
             game = Game.objects.get(pk=game_pk)
-            return render(request, 'store/gamedescription.html', {'game' : game})
+            tophighscores = Highscore.objects.filter(game = game)
+            tophighscores.order_by('score')
+            tophighscores = tophighscores[:10]
+            return render(request, 'store/gamedescription.html', {'game' : game, 'tophighscores': tophighscores})
         except:
             return redirect('store')

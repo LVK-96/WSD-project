@@ -1,5 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
+<<<<<<< HEAD
 <p>{{game.name}}</p>
 <p>{{game.description}}</p>
+
+<p>Top Ten Highscores</p>
+<p>
+    <table align="center">
+        <tr> <th>Game Name</th> <th>Player Name</th> <th>Highscore</th> </tr>
+        {% for scores in tophighscores%}
+        <tr><td>{{ scores.game.name }}</td> <td> {{ scores.player.username }} </td> <td>{{ scores.score }} </td> </tr>                
+        {% endfor %}
+    </table>
+</p>
+=======
+<h4 id="lib-header">{{ game.name }}</h4>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            {% load staticfiles %}
+            <img class="img-fluid w-75" src="{% static 'default_game.jpg' %}" alt="game image" title="{{game.name}}" style="margin-bottom:25px;">
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6 style="margin-bottom: 15px;"><b>Description</b></h6>
+            <p class="font-weight-light">{{ game.description }}</p>
+        </div>
+    </div>
+<!--    <div class="row">
+        <div class="col-sm-12">
+            <p class="font-weight-light">{{ game.description }}</p>
+        </div>
+    </div>-->
+</div>
+>>>>>>> ce3fb1926980111b6f9db5106132a10e50f12b93
 {% endblock %}
