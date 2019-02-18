@@ -39,9 +39,7 @@ class Order(models.Model):
     status = models.CharField(choices = STATUS_CHOICES, default=OPENED_PAYMENT, max_length=20)
     games = models.ManyToManyField(Game)
     session_key = models.CharField(max_length=500)
-<<<<<<< HEAD
     total = models.FloatField(default=0, null=False)
-=======
     games_and_prices = models.TextField()
     date = models.DateTimeField(auto_now=True)
     total = models.FloatField(default=0, null=False)
@@ -53,4 +51,3 @@ class Order(models.Model):
     def decodeJSON(self, json_string):
         decoded = json.loads(json_string)
         return decoded
->>>>>>> 833d5a111115e655896f96d49674f8a815601408
