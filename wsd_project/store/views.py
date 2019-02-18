@@ -54,6 +54,8 @@ def highscores(request):
 @active_user_required
 def my_library(request):
     #In highscores foreign keys are saved as
+    if request.user.isdev:
+        return redirect('index')
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
     allgames = Game.objects.all()
     return render(request, 'store/my_library.html', {'myhighscores': myhighscores, 'allgames': allgames})
@@ -124,6 +126,9 @@ def dev_modify_game(request, game_pk):
 @active_user_required
 def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
+    if request.user.isdev:
+        return redirect('index')
+
     if 'cart' not in request.session:
        request.session['cart'] = []
 
@@ -179,7 +184,7 @@ def confirm_payment(request):
             return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden()
 
-    return render(request, 'store/home.html')
+    return redirect('index')
 
 @active_user_required
 def payment_success(request):
@@ -242,21 +247,11 @@ def payment_error(request):
 #the game field in the highscores is a foreign key -> the primary key of the game
 #a new highscore, with the minimum score should be added when a player purchases the game - this can be used
 #to tell if a player has puirchased a specific game
-
-@active_user_required
-def addhighscore(request, game_pk, new_score):
-    if request.method == 'POST':
-        if Highscore.objects.filter(player=request.user, game=game_pk):
-            #if highscore already exists, update it
-            # TODO: fix this
-            highscores = Highscore.objects.get(player=request.user, game=game_pk)
-        else:
-            #if highscore doesn't exist, create one
-            Highscore.objects.create(game=game_pk, player = request.user, score = new_score)
-    return redirect('profilepage')
-
 @active_user_required
 def startgame(request, game_pk):
+    if request.user.isdev:
+        return redirect('index')
+
     if request.method == 'GET':
         if Highscore.objects.filter(player=request.user, game=game_pk):
             #if highscore exists the player owns the game
@@ -298,8 +293,10 @@ def startgame(request, game_pk):
         return redirect('my_library')
 
 
-
 def game_description(request, game_pk):
     if request.method == 'GET':
-        game = Game.objects.get(pk=game_pk)
-        return render(request, 'store/gamedescription.html', {'game' : game})
+        try:
+            game = Game.objects.get(pk=game_pk)
+            return render(request, 'store/gamedescription.html', {'game' : game})
+        except:
+            return redirect('store')
