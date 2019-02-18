@@ -49,7 +49,7 @@ def highscores(request):
         user_object = Highscore.objects.get(game = item["game"], score = item["max_score"]).player
         user_name = user_object.username
         context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_name })
-    
+
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
 
     return render(request, 'store/highscores.html', {'bestscores': context, 'myhighscores': myhighscores})
@@ -104,7 +104,7 @@ def order_history(request, game_pk):
                     prices.append(price)
         dates_and_prices = zip(dates, prices)
         return render(request, 'store/order_history.html', {'dates_and_prices': dates_and_prices, 'game': check_game})
-    
+
     return HttpResponseForbidden
 
 @active_user_required
@@ -260,33 +260,36 @@ def startgame(request, game_pk):
             return redirect('my_library')#should it be mylibrary.html
 
     if request.method == 'POST':
-        #ajax request so the html response isn't rendered
-        requesttype = request.POST.get('messagetype')
-        highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
+        #test that user owns the game
+        if Highscore.objects.filter(player=request.user, game=game_pk):
+            #ajax request so the html response isn't rendered
+            requesttype = request.POST.get('messagetype')
+            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
 
-        if requesttype == "SCORE":
-            newscore = int(request.POST.get('score'))
-            currentscore = highscoreobj.score
-            if newscore > currentscore:
-                highscoreobj.score = newscore
+            if requesttype == "SCORE":
+                newscore = int(request.POST.get('score'))
+                currentscore = highscoreobj.score
+                if newscore > currentscore:
+                    highscoreobj.score = newscore
+                    highscoreobj.save()
+                    return HttpResponse(status=204)#204 request processed, but no content
+                else:
+                    return HttpResponse(status=204)
+            elif requesttype == "SAVE":
+                newstate = request.POST.get('gamestate')
+                highscoreobj.state = newstate
                 highscoreobj.save()
-                return HttpResponse(status=204)#204 request processed, but no content
-            else:
                 return HttpResponse(status=204)
 
-        elif requesttype == "SAVE":
-            newstate = request.POST.get('gamestate')
-            highscoreobj.state = newstate
-            highscoreobj.save()
-            return HttpResponse(status=204)
+            elif requesttype == "LOAD_REQUEST":
+                return JsonResponse({'state': highscoreobj.state})
 
-        elif requesttype == "LOAD_REQUEST":
-            return JsonResponse({'state': highscoreobj.state})
-
-        elif requesttype == "ERROR":
-            return HttpResponse(status=400)
+            elif requesttype == "ERROR":
+                return HttpResponse(status=400)
+            else:
+                return HttpResponse(status=400)#400 bad request
         else:
-            return HttpResponse(status=400)#400 bad request
+            redirect('my_library')
     else:
         return redirect('my_library')
 
