@@ -1,17 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>{{game.name}}</p>
-<p>{{game.description}}</p>
-
-<p>Top Ten Highscores</p>
-<p>
-    <table align="center">
-        <tr> <th>Game Name</th> <th>Player Name</th> <th>Highscore</th> </tr>
-        {% for scores in tophighscores%}
-        <tr><td>{{ scores.game.name }}</td> <td> {{ scores.player.username }} </td> <td>{{ scores.score }} </td> </tr>                
-        {% endfor %}
-    </table>
-</p>
 <h4 id="lib-header">{{ game.name }}</h4>
 <hr>
 <div class="container">
@@ -25,10 +13,23 @@
             <p class="font-weight-light">{{ game.description }}</p>
         </div>
     </div>
-<!--    <div class="row">
-        <div class="col-sm-12">
-            <p class="font-weight-light">{{ game.description }}</p>
-        </div>
-    </div>-->
 </div>
+
+<h6><b>Top Ten Highscores</b></h6>
+    <table class="table table-bordered mx-auto">
+        <thead style="background-image: radial-gradient(rgb(51, 51, 51), rgb(77, 77, 77)); color: white;"
+            <tr>
+                <th scope="col">Player Name</th>
+                <th scope="col">Highscore</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for scores in tophighscores%}
+            <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
+                <td scope="col">{{ scores.player.username }}</td>
+                <td scope="col">{{ scores.score }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

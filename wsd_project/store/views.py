@@ -46,7 +46,7 @@ def highscores(request):
         user_object = Highscore.objects.get(game = item["game"], score = item["max_score"]).player
         user_name = user_object.username
         context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_name })
-    
+
     myhighscores = Highscore.objects.filter(player_id=request.user.pk)
 
     return render(request, 'store/highscores.html', {'bestscores': context, 'myhighscores': myhighscores})
@@ -101,7 +101,7 @@ def order_history(request, game_pk):
                     prices.append(price)
         dates_and_prices = zip(dates, prices)
         return render(request, 'store/order_history.html', {'dates_and_prices': dates_and_prices, 'game': check_game})
-    
+
     return HttpResponseForbidden
 
 @active_user_required
@@ -266,13 +266,12 @@ def startgame(request, game_pk):
             if requesttype == "SCORE":
                 newscore = int(request.POST.get('score'))
                 currentscore = highscoreobj.score
-            if newscore > currentscore:
-                highscoreobj.score = newscore
-                highscoreobj.save()
-                return HttpResponse(status=204)#204 request processed, but no content
-            else:
-                return HttpResponse(status=204)
-
+                if newscore > currentscore:
+                    highscoreobj.score = newscore
+                    highscoreobj.save()
+                    return HttpResponse(status=204)#204 request processed, but no content
+                else:
+                    return HttpResponse(status=204)
             elif requesttype == "SAVE":
                 newstate = request.POST.get('gamestate')
                 highscoreobj.state = newstate
