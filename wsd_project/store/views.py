@@ -134,6 +134,13 @@ def cart(request):
        request.session['cart'] = []
 
     user_cart = request.session['cart']
+    if request.method == 'POST':
+        print("asd")
+        game_id = request.POST.get("game_id")
+        if game_id in user_cart:
+            user_cart.remove(game_id)
+            request.session['cart'] = user_cart
+    
     empty_flag = False
     if not user_cart:
         empty_flag = True
@@ -166,8 +173,8 @@ def confirm_payment(request):
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
-    if request.method == 'POST':
-        if checksum == request.POST.get("checksum"):
+    if request.method == 'GET':
+        if checksum == request.GET.get("checksum"):
             order = Order.objects.create(user=request.user)
             user_cart = request.session['cart']
             order.total = total

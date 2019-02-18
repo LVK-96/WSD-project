@@ -15,11 +15,18 @@
             <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
                 <td>{{ game.name }}</td>
                 <td>{{ price }}€</td>
+                <td>
+                    <form method="POST" name="remove">
+                        {% csrf_token %}
+                        <input type="hidden" name="game_id" value= "{{ game.id }}" >
+                        <input class="btn btn-outline-light" type="submit" value="Remove from cart"/>
+                    </form>
+                </td> 
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <form action="{% url 'confirm' %}" method="POST">
+    <form action="{% url 'confirm' %}" method="GET">
         {% csrf_token %}
         <input type="hidden" name="checksum"
             value= "{{ checksum }}" />
