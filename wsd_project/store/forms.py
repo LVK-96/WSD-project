@@ -9,4 +9,4 @@ class NewGameForm(forms.ModelForm):
 class GameUpdateForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = ['name', 'price', 'link']
+        fields = ['name', 'price', 'link', 'description', 'genre']
