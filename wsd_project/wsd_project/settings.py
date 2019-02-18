@@ -25,7 +25,7 @@ else:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.getenv('DEBUG'):
-    DEBUG = False
+    DEBUG = True
 else:
     DEBUG = True
 
@@ -169,7 +169,7 @@ EMAIL_USE_TLS = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "media"),
+    os.path.join(BASE_DIR, "media   "),
     os.path.join(BASE_DIR, "media/profile_pics"),
     os.path.join(BASE_DIR, "store/static"),
 ]
