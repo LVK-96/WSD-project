@@ -64,8 +64,14 @@ $(document).ready(function() {
             console.log("correct origin");
             if(event.data.messageType == "SETTING"){
                 console.log("settings received");
-                // mainly to set the resolution
-                //NEEDS DOING
+                // set iframe dimensions
+                console.log("width");
+                console.log(event.data.options.width);
+                console.log("height");
+                console.log(event.data.options.height);
+                var frame = $("iframe");
+                frame.attr("width", event.data.options.width);
+                frame.attr("height", event.data.options.height);
             }
             else if(event.data.messageType == "SCORE"){
                 console.log("score received");
