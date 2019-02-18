@@ -9,9 +9,9 @@
                 <div class="card bg-dark mx-auto" style="width: 16rem;">
                     {% load staticfiles %}
                     <a href="{% url 'gamedescription' game.id %}">
-                        <img class="card-img-top" src="{% static 'default_game.jpg' %}" alt="game image">
+                        <img class="card-img-top" src="{% static 'default_game.jpg' %}" alt="game image" title="{{game.name}}">
                     </a>
-                    <a href= "{% url 'gamedescription' game.id %}" style="color:inherit;">
+                    <a href= "{% url 'gamedescription' game.id %}" style="color:inherit;" title="{{game.name}}">
                         <h4 class="card-title">{{game.name}}</h4>
                     </a>
                     <p class="card-text">
