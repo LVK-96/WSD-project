@@ -8,7 +8,6 @@ class Game(models.Model):
     dev = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     price = models.FloatField(default=0)
     link = models.URLField(unique=True, default="", null=False)
-    #purchases = models.integerField(default=0)#when adding a new game should always be set to 0
     #tags = dictionary
 
 class Highscore(models.Model):
