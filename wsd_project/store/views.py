@@ -26,7 +26,9 @@ def index(request):
 def store(request):
     allgames = Game.objects.all()
     response = render(request, 'store/store.html', {'allgames': allgames})
+    
     if request.method == 'POST':
+        print(request.POST.get("id"))
         if 'cart' not in request.session:
             request.session['cart'] = []
         user_cart = request.session['cart']
@@ -34,6 +36,7 @@ def store(request):
         if request.POST.get("id") not in user_cart and not highscores: # No duplicate items in cart and user does not already own game
             user_cart.append(request.POST.get("id"))
         request.session['cart'] = user_cart
+    
     return response
 
 def highscores(request):
