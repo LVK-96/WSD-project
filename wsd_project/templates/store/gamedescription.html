@@ -2,4 +2,14 @@
 {% block content %}
 <p>{{game.name}}</p>
 <p>{{game.description}}</p>
+
+<p>Top Ten Highscores</p>
+<p>
+    <table align="center">
+        <tr> <th>Game Name</th> <th>Player Name</th> <th>Highscore</th> </tr>
+        {% for scores in tophighscores%}
+        <tr><td>{{ scores.game.name }}</td> <td> {{ scores.player.username }} </td> <td>{{ scores.score }} </td> </tr>                
+        {% endfor %}
+    </table>
+</p>
 {% endblock %}
