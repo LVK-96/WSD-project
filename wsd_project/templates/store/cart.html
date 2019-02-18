@@ -2,31 +2,33 @@
 {% block content %}
 <h4 id="lib-header">Cart</h4>
 <hr>
+    {% if not empty_flag%}
     <table class="table table-bordered mx-auto">
-        <thead>
+        <thead style="background-image: radial-gradient(rgb(51, 51, 51), rgb(77, 77, 77)); color: white;">
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Price</th>
             </tr>
-        <thead>
+        </thead>
         <tbody>
         {% for game, price in games_and_prices %}
-            <tr>
+            <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
                 <td>{{ game.name }}</td>
                 <td>{{ price }}€</td>
             </tr>
         {% endfor %}
         </tbody>
-        {% if not empty_flag%}
+        </table>
         <form action="{% url 'confirm' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" name="checksum"
                 value= "{{ checksum }}" />
-            
-            <label for="id_amount">Amount:</label>
+
+            <label for="id_amount"><b>Total:</b> {{ total }}€</label>
             <input class="btn btn-outline-light" type="submit" value="Proceed to payment"/>
         </form>
-        {{ total }}
+    {% endif %}
+        {% if empty_flag %}
+        <p class="font-weight-light" style="font-size: 1.5rem;">Your cart is empty. Go to <a href="{% url 'store' %}" style="color: rgb(191, 191, 191);">Store</a> to browse games.</p>
         {% endif %}
-    </table>
 {% endblock %}
