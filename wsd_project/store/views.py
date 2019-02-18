@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Order, Highscore, Game
 from django.conf import settings
+from django.db.models.aggregates import Max
 import json
 #from django.utils.decorators import method_decorator
 
@@ -35,6 +36,12 @@ def store(request):
     return response
 
 def highscores(request):
+    largesthighscore = Highscore.objects.values('game').annotate(max_score=Max('score'))
+    #iterate through for a check
+    print(largesthighscore.all())
+    for entry in largesthighscore:
+        print(entry['game'])
+        print(entry['max_score'])
     return render(request, 'store/highscores.html')
 
 @active_user_required
