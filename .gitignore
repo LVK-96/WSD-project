@@ -3,4 +3,5 @@ venv/
 *.pyc
 pycache/
 *.sqlite3
+add_snake.json
 profile_pics/

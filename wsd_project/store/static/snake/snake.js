@@ -91,6 +91,7 @@ function game() {
                     "messageType": "SCORE",
                     "score": parseFloat($("#score").text())
                 };
+                console.log(msg);
                 window.parent.postMessage(msg, "*");
                 is_paused = true
             }            
