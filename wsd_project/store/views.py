@@ -1,7 +1,7 @@
 ''' Write views here '''
 from hashlib import md5
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.template import loader
 from django.views import generic
 from .forms import NewGameForm
@@ -194,10 +194,9 @@ def startgame(request, game_pk):
     if request.method == 'POST':
         #ajax request so the html response isn't rendered
         requesttype = request.POST.get('messagetype')
+        highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
 
         if requesttype == "SCORE":
-            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
-
             newscore = int(request.POST.get('score'))
             currentscore = highscoreobj.score
             if newscore > currentscore:
@@ -209,15 +208,13 @@ def startgame(request, game_pk):
 
         elif requesttype == "SAVE":
             newstate = request.POST.get('gamestate')
-            highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
-            print(newstate)
             highscoreobj.state = newstate
             highscoreobj.save()
             return HttpResponse(status=204)
 
-        elif requesttype == "LOAD":
-            print(request.POST.get('score'))
-            return HttpResponse(status=204)
+        elif requesttype == "LOAD_REQUEST":
+            print(highscoreobj.state)
+            return JsonResponse({'state': highscoreobj.state})
 
         elif requesttype == "ERROR":
             print("error")

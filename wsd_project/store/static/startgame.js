@@ -72,9 +72,9 @@ $(document).ready(function() {
                 //the url does not need to be specified - it is by default the address of the html that launches the script 
                 $.ajax({
                     type: "POST",
-                    data: {'messagetype' : "SCORE", 'score' : score}
+                    data: {'messagetype' : "SCORE", 'score' : score},
                     });
-                //make a ajax POST REQUEST to the view 
+                //make a ajax POST REQUEST to the view
             }
             else if(event.data.messageType == "SAVE"){
                 //save the gamestate to the service
@@ -82,11 +82,23 @@ $(document).ready(function() {
                 var gamestate = JSON.stringify(event.data.gameState);
                 $.ajax({
                     type: "POST",
-                    data: {'messagetype' : "SAVE", 'gamestate' : gamestate}
+                    data: {'messagetype' : "SAVE", 'gamestate' : gamestate},
                     });
             }
             else if(event.data.messageType == "LOAD_REQUEST"){
                 console.log("load request received");
+                $.ajax({
+                    type: 'POST',
+                    data: {'messagetype': "LOAD_REQUEST"},
+                    dataType: 'json',
+                    success: function(data){
+                        console.log("success function triggered");
+                        console.log(data);
+                        //data is the jsonrespponse from the views
+                        var loadstate = JSON.parse(data);
+                        //send the loadstate to the iframe with messagetype as 'LOAD' 
+                    },
+                });
                 //request to load gamestate from service => respond with postmessage with message type as LOAD and data as the given data
             }
             else{
