@@ -10,7 +10,7 @@
                 <img src="{{ user.profile.profile_pic.url }}" alt="profile picture" class="img-fluid rounded float-left" height="200" width="200">
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 align-self-center" id="profile">
-                <p style="font-size: 4rem; font-size: 3.5vw;">{{ user.username }}</p>
+                <p style="font-size: 1.5rem;"><strong>{{ user.username }}</strong></p>
                 <p style="font-size: 1rem;">{{ user.email }}</p>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 align-self-center" id="profile">
@@ -18,25 +18,21 @@
             </div>
         </div>
         <hr>
-        <p style="margin: 0;"><a class="btn btn-outline-dark" data-toggle="collapse" href="#collapseUpdate" role="button" aria-expand="false" aria-controls="collapseUpdate">Update info</a></p>
+        <p style="margin: 0;">
+            <a class="btn btn-outline-dark" data-toggle="collapse" href="#collapseUpdate" role="button" aria-expand="false" aria-controls="collapseUpdate">Update info</a>
+        </p>
         <div class="collapse row" id="collapseUpdate">
             <div class="col-12">
-            <p style="font-size:2rem;">Update info</p>
-            </div>
-            <div class="col-12">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ u_form.as_p }}
-                {{ p_form.as_p }}
-                <button class="btn btn-outline-dark" type="submit">Save</button>
-            </form>
+                <p style="font-size:2rem;">Update info</p>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ u_form.as_p }}
+                    {{ p_form.as_p }}
+                    <button class="btn btn-outline-dark" type="submit">Save</button>
+                </form>
             </div>
         </div>
-        {% if user.isdev %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'addgame' %}">Add Game</a>
-        </li>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

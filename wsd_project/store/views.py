@@ -53,19 +53,19 @@ def addgame(request):
                 game.dev = request.user
                 game.save()
 
-                return redirect('profilepage')
+                return redirect('devpanel')
         else:
             form = NewGameForm()
-    
+
         return render(request, 'store/addgame.html', {'form': form})
     else:
-        return redirect('profilepage')
+        return redirect('devpanel')
 
 @active_user_required
 def developer_panel(request):
     if not request.user.isdev():
         return HttpResponseForbidden
-    
+
     devs_games = Game.objects.filter(dev=request.user)
     return render(request, 'store/dev_panel.html', {'games': devs_games})
 
@@ -84,7 +84,7 @@ def dev_modify_game(request, game_pk):
         else:
             form = GameUpdateForm(instance=check_game)
             return render(request, 'store/modify_game.html', {'form': form, 'game': check_game, 'orders': orders})
-    
+
     return HttpResponseForbidden
 
 @active_user_required
@@ -92,7 +92,7 @@ def cart(request):
     # payment service: http://payments.webcourse.niksula.hut.fi/
     if 'cart' not in request.session:
        request.session['cart'] = []
-    
+
     user_cart = request.session['cart']
     empty_flag = False
     if not user_cart:
@@ -107,7 +107,7 @@ def cart(request):
         total += game.price
         prices.append(game.price)
     games_and_prices = zip(games, prices)
-    
+
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
@@ -116,16 +116,16 @@ def cart(request):
 def confirm_payment(request):
     if 'cart' not in request.session:
         return redirect('cart')
-    
+
     user_cart = request.session['cart']
-    total = 0    
+    total = 0
     for game_id in user_cart:
         game = Game.objects.get(pk=game_id)
         total += game.price
-    
+
     checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
-    
+
     if request.method == 'POST':
         if checksum == request.POST.get("checksum"):
             order = Order.objects.create(user=request.user)
@@ -137,8 +137,8 @@ def confirm_payment(request):
                 order.games.add(game)
             order.save()
             return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
-        return HttpResponseForbidden() 
-    
+        return HttpResponseForbidden()
+
     return render(request, 'store/home.html')
 
 @active_user_required
@@ -155,7 +155,7 @@ def payment_success(request):
         order = Order.objects.get(session_key=request.session.session_key)
         order.status = order.SUCCESFULL_PAYMENT
         order.save()
-        
+
         # add games to user
         for game_id in user_cart:
             game = Game.objects.get(pk=game_id)
@@ -193,7 +193,7 @@ def payment_error(request):
         order = Order.objects.get(session_key=request.session.session_key)
         order.status = order.FAILED_PAYMENT
         order.save()
-        
+
         request.session.cycle_key()
         return render(request, 'store/payment_error.html')
     return HttpResponseForbidden()
@@ -208,7 +208,7 @@ def addhighscore(request, game_pk, new_score):
     if request.method == 'POST':
         if Highscore.objects.filter(player=request.user, game=game_pk):
             #if highscore already exists, update it
-            # TODO: fix this 
+            # TODO: fix this
             highscores = Highscore.objects.get(player=request.user, game=game_pk)
         else:
             #if highscore doesn't exist, create one
@@ -247,7 +247,7 @@ def startgame(request, game_pk):
             highscoreobj = Highscore.objects.get(player=request.user, game=game_pk)
             print(newstate)
             highscoreobj.state = newstate
-            highscoreobj.save() 
+            highscoreobj.save()
             return HttpResponse(status=204)
 
         elif requesttype == "LOAD":

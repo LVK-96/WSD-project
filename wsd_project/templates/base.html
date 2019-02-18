@@ -73,6 +73,7 @@
                 background-image: linear-gradient(to right, rgb(77, 77, 77), white);
                 padding-bottom: 2px;
                 border-left-color: rgb(102, 102, 102);
+                background-image: radial-gradient(circle, rgb(230, 230, 230), rgb(140, 140, 140));
             }
             .card-title {
                 padding: 2%;
@@ -140,14 +141,18 @@
                 <ul class="nav navbar-nav">
                     <a class="nav-item nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="{% url 'store' %}">Store</a>
+                    {% if not user.is_dev %}
                     <a class="nav-item nav-link" href="{% url 'my_library' %}">My library</a>
+                    {% endif %}
                     <a class="nav-item nav-link" href="{% url 'highscores' %}">Highscores</a>
                     {% if user.is_dev %}
                     <a class="nav-item nav-link" href="{% url 'devpanel' %}">Developer panel</a>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav ml-auto">
-                                        <a class="nav-item nav-link" href="{% url 'cart' %}"><span class="fas fa-shopping-cart"></span> Cart</a>
+                    {% if not user.is_dev %}
+                    <a class="nav-item nav-link" href="{% url 'cart' %}"><span class="fas fa-shopping-cart"></span> Cart</a>
+                    {% endif %}
                     <a class="nav-item nav-link" href="{% url 'profilepage' %}"><span class="fas fa-user"></span> My profile</a>
                     <a class="nav-item nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
                 </ul>
