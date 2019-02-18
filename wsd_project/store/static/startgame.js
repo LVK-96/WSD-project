@@ -1,22 +1,3 @@
-/*
-console.log("loading script");
-$(document).ready(function() {
-    'use strict';
-    $(window).on('message', function(event) {
-        if (event.origin !== "http://webcourse.cs.hut.fi/example_game.html"){
-            console.log("received message from the iframe")
-            console.log("origin")
-            console.log(event.origin)
-            console.log("data")
-            console.log(event.data)
-            console.log("source")
-            console.log(event.source)
-            return;
-        }
-    });
-});
-*/
-/*HTMLIFrameElement.contentWindow (to reference an embedded <iframe> from its parent window)*/
 
 // Following getCookie function, csrf safe method and ajax setup copiedfrom django specification  from https://docs.djangoproject.com/en/2.1/ref/csrf/
 // using jQuery
@@ -58,6 +39,8 @@ $(document).ready(function() {
         console.log("received message from the iframe")
         //find the source attribute of the iframe (for post message origin checks)
         var source = $("iframe").attr('src');
+        //the window object of the spawned iframe
+        var targetwindow = event.source;
 
         //origin does not have the resource appended to it only the protocol and domain
         if (source.indexOf(event.origin) !== -1){
@@ -65,10 +48,6 @@ $(document).ready(function() {
             if(event.data.messageType == "SETTING"){
                 console.log("settings received");
                 // set iframe dimensions
-                console.log("width");
-                console.log(event.data.options.width);
-                console.log("height");
-                console.log(event.data.options.height);
                 var frame = $("iframe");
                 frame.attr("width", event.data.options.width);
                 frame.attr("height", event.data.options.height);
@@ -80,8 +59,18 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     data: {'messagetype' : "SCORE", 'score' : score},
+                    success: function(){
+                        console.log("submitting score successful");
+                    },
+                    error: function(){
+                        console.log("error in submitting score");
+                        var responsemessage = {
+                            messageType: "ERROR",
+                            info: "error in submitting score",
+                        };
+                        targetwindow.postMessage(responsemessage, source);
+                    }
                     });
-                //make a ajax POST REQUEST to the view
             }
             else if(event.data.messageType == "SAVE"){
                 //save the gamestate to the service
@@ -90,6 +79,17 @@ $(document).ready(function() {
                 $.ajax({
                     type: "POST",
                     data: {'messagetype' : "SAVE", 'gamestate' : gamestate},
+                    success: function(){
+                        console.log("saving gamestate successful");
+                    },
+                    error: function(){
+                        console.log("error in saving gamestate");
+                        var responsemessage = {
+                            messageType: "ERROR",
+                            info: "error in saving gamestate",
+                        };
+                        targetwindow.postMessage(responsemessage, source);
+                    },
                     });
             }
             else if(event.data.messageType == "LOAD_REQUEST"){
@@ -99,29 +99,51 @@ $(document).ready(function() {
                     data: {'messagetype': "LOAD_REQUEST"},
                     dataType: 'json',
                     success: function(data){
-                        console.log("success function triggered");
-                        console.log(data);
                         //data is the jsonrespponse from the views
-                        var loadstate = JSON.parse(data.state);
-                        var responsemessage = { 
-                            messageType: "LOAD",
-                            gameState: loadstate,
+                        if(data.state !== ""){
+                            console.log("loading game state successful");
+                            //send gamestate to the game
+                            var loadstate = JSON.parse(data.state);
+                            var responsemessage = {
+                                messageType: "LOAD",
+                                gameState: loadstate,
+                            };
+                            //send the loadstate to the iframe with messagetype as 'LOAD'
+                            targetwindow.postMessage(responsemessage, source);
+                            }
+                        else{
+                            console.log("no gamestate found");
+                            //send ERROR message to the game
+                            var responsemessage = {
+                                messageType: "ERROR",
+                                info: "no gamestate found",
+                            };
+                            targetwindow.postMessage(responsemessage, source);
+                            
+                        }
+                    },
+                    error: function(){
+                        console.log("error in loading gamestate");
+                        var responsemessage = {
+                            messageType: "ERROR",
+                            info: "error in loading gamestate",
                         };
-                        //The window object of the spawned iframe
-                        var targetwindow = event.source;
-                        //send the loadstate to the iframe with messagetype as 'LOAD'
                         targetwindow.postMessage(responsemessage, source);
+
                     },
                 });
                 //request to load gamestate from service => respond with postmessage with message type as LOAD and data as the given data
             }
             else{
                 console.log("message not identified");
-                //should send an error postmessage to the game
+                        var responsemessage = {
+                            messageType: "ERROR",
+                            info: "message not identified",
+                        };
+                        targetwindow.postMessage(responsemessage, source);
             }
         }
-        console.log("data");
-        console.log(event.data);
+        
     }
 });
 
