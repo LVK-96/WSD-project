@@ -30,6 +30,11 @@ $.ajaxSetup({
     }
 });
 
+function replacestatic(baseurl){
+    var localstring = "http://127.0.0.1:8000/";
+    var endstring = baseurl.substring(8);
+    return localstring.concat(endstring);
+}
 
 $(document).ready(function() {
     window.addEventListener("message", receiveMessage, false);
@@ -37,8 +42,17 @@ $(document).ready(function() {
     function receiveMessage(event){
 
         console.log("received message from the iframe")
+        console.log(event.data);
+        
+        console.log("event origin:");
+        console.log(event.origin);
         //find the source attribute of the iframe (for post message origin checks)
         var source = $("iframe").attr('src');
+        if(source.indexOf("/static/") !== -1){
+            source = replacestatic(source);
+        }
+        console.log("source:");
+        console.log(source);
         //the window object of the spawned iframe
         var targetwindow = event.source;
 
@@ -136,11 +150,11 @@ $(document).ready(function() {
             }
             else{
                 console.log("message not identified");
-                        var responsemessage = {
-                            messageType: "ERROR",
-                            info: "message not identified",
-                        };
-                        targetwindow.postMessage(responsemessage, source);
+                var responsemessage = {
+                    messageType: "ERROR",
+                    info: "message not identified",
+                    };
+                targetwindow.postMessage(responsemessage, source);
             }
         }
         

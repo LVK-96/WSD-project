@@ -20,11 +20,13 @@ function game() {
     });
 
     $("#submit_score").click( function () {
+        is_paused = True;
         var msg = {
           "messageType": "SCORE",
           "score": parseFloat($("#score").text())
         };
         window.parent.postMessage(msg, "*");
+        is_paused = False;
       });
 
     $("#save").click( function () {
@@ -91,6 +93,7 @@ function game() {
                     "messageType": "SCORE",
                     "score": parseFloat($("#score").text())
                 };
+                console.log(msg);
                 window.parent.postMessage(msg, "*");
                 is_paused = true
             }            

@@ -1,4 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
     <p>Highscores</p>
+
+    <p>Overall Highscores</p>
+    <p>
+        <table align="center">
+            <tr> <th>Game Name</th> <th>Player Name</th> <th>Highscore</th> </tr>
+            {% for onescore in bestscores %}
+            <tr><td>{{ onescore.game_name }}</td> <td> {{ onescore.player_name }} </td> <td>{{ onescore.max_score }} </td> </tr>                
+            {% endfor %}
+        </table>
+    </p>
+    <p>My Highscores</p>
+    <p>
+        <table align="center">
+            <tr> <th>Game Name</th> <th>Highscore</th> </tr>
+            {% for scores in myhighscores %}
+            <tr><td>{{ scores.game.name }}</td> <td>{{ scores.score }} </td> </tr>                
+            {% endfor %}
+        </table>
+    </p>
+
+    
 {% endblock %}
