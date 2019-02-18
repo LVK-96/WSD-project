@@ -302,10 +302,6 @@ def startgame(request, game_pk):
                     return HttpResponse(status=204)#204 request processed, but no content
                 else:
                     return HttpResponse(status=204)
-<<<<<<< HEAD
-
-=======
->>>>>>> e85e833d2f5db03a17a20d782ff0e1faafa5989c
             elif requesttype == "SAVE":
                 newstate = request.POST.get('gamestate')
                 highscoreobj.state = newstate
