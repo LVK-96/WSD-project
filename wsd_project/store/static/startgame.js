@@ -136,11 +136,11 @@ $(document).ready(function() {
             }
             else{
                 console.log("message not identified");
-                        var responsemessage = {
-                            messageType: "ERROR",
-                            info: "message not identified",
-                        };
-                        targetwindow.postMessage(responsemessage, source);
+                var responsemessage = {
+                    messageType: "ERROR",
+                    info: "message not identified",
+                    };
+                targetwindow.postMessage(responsemessage, source);
             }
         }
         
