@@ -23,8 +23,8 @@ def RESTapi(request):
             user = CustomUser.objects.get(username=username)
             game = Game.objects.get(name=game_name)
             if Highscore.objects.get(game=game, player=user):
-                highscore = Highscore.objects.get(game=game, player=user)
                 score_JSON = json.dumps(highscore.score)
+                highscore = Highscore.objects.get(game=game, player=user)
                 return render(request, 'api/REST.html', {'jsonString': score_JSON})
 
         if game_name == None:

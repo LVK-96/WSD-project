@@ -28,6 +28,7 @@
        <input type="submit" name="filter" value="filter">
     </form>
 </div>
+
 <div class="container">
     <form method="POST">
        {% csrf_token %}
@@ -36,6 +37,7 @@
        <input type="submit" name=submit value="search">
     </form>
 </div>
+
 {% if flag == 1 %}
     <div class="container">
         <p>Game With That Name Not Found</p>

@@ -58,21 +58,13 @@ def store(request):
     return render(request, 'store/store.html', {'allgames': allgames, 'tags': tags, 'flag': flag})
 
 def highscores(request):
-    largesthighscore = Highscore.objects.values('game').annotate(max_score=Max('score'))
-
-    context = []
-
-    for item in largesthighscore:
-        game_name = Game.objects.all().get(pk = item["game"]).name
-        user_queryset = Highscore.objects.filter(game = item["game"], score = item["max_score"])
-        user_names = []
-        for user_object in user_queryset:
-            user_names.append(user_object.player.username)
-        context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_names })
-    
-    myhighscores = Highscore.objects.filter(player_id=request.user.pk)
-
-    return render(request, 'store/highscores.html', {'bestscores': context, 'myhighscores': myhighscores})
+    if request.method == 'GET':
+        if "game" in request.GET:
+            game_name = request.GET.get("game")
+            game = Game.objects.get(name=game_name)
+            highscores = Highscore.objects.filter(game=game)
+            return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
+    return render(request, 'store/highscores.html')
 
 @active_user_required
 def my_library(request):

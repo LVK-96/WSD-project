@@ -1,46 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="container">
+    <form method="GET">
+       {% csrf_token %}
+        <input type="hidden" name="messagetype" value="search">
+       <input type="text" name="game">
+       <input type="submit" name=submit value="search">
+    </form>
+</div>
+{% if flag == 1 %}
+    <div class="container">
+        <p>Game With That Name Not Found</p>
+    </div>
+{% endif %}
+
 <h4 id="lib-header">Highscores</h4>
 <hr>
-
-    <h5>Overall Highscores</h5>
+    {% if game %}
+    <h5>Highscores for {{ game.name }}</h5>
+    {% endif %}
     <table class="table table-bordered mx-auto m-3">
         <thead style="background-image: radial-gradient(rgb(51, 51, 51), rgb(77, 77, 77)); color: white;">
             <tr>
-                <th scope="col">Game Name</th>
                 <th scope="col">Player Name</th>
-                <th scope="col">Highscore</th>
+                <th scope="col">Score</th>
             </tr>
         </thead>
         <tbody>
-        {% for onescore in bestscores %}
-            {% for player in onescore.player_name %}
+        {% for score in highscores %}
             <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
-                <td scope="col">{{ onescore.game_name }}</td>
-                <td scope="col"> {{ player }}</td>
-                <td scope="col">{{ onescore.max_score }} </td>
-            </tr>
-            {% endfor %}
-        {% endfor %}
-        </tbody>
-    </table>
-    <h5>My Highscores</h5>
-    <table class="table table-bordered mx-auto m-3">
-        <thead style="background-image: radial-gradient(rgb(51, 51, 51), rgb(77, 77, 77)); color: white;">
-            <tr>
-                <th scope="col">Game Name</th>
-                <th scope="col">Highscore</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for scores in myhighscores %}
-            <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
-                <td scope="col">{{ scores.game.name }}</td>
-                <td scope="col">{{ scores.score }}</td>
+                <td scope="col"> {{ score.player.username }}</td>
+                <td scope="col">{{ score.score }} </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-
 {% endblock %}
