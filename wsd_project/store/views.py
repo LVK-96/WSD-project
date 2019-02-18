@@ -69,7 +69,6 @@ def addgame(request):
                 game = form.save(commit = False)
                 game.dev = request.user
                 game.save()
-
                 return redirect('devpanel')
         else:
             form = NewGameForm()
@@ -111,7 +110,6 @@ def dev_modify_game(request, game_pk):
     owner = check_game.dev
 
     if owner == request.user:
-        orders = Order.objects.filter(games=check_game)
         if request.method == 'POST':
             form = GameUpdateForm(request.POST, instance=check_game)
             if form.is_valid():
@@ -119,7 +117,7 @@ def dev_modify_game(request, game_pk):
                 return redirect('modify', game_pk=game_pk)
         else:
             form = GameUpdateForm(instance=check_game)
-            return render(request, 'store/modify_game.html', {'form': form, 'game': check_game, 'orders': orders})
+            return render(request, 'store/modify_game.html', {'form': form, 'game': check_game})
 
     return HttpResponseForbidden
 
