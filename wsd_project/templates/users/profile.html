@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
-
 {% block title %}Profile page{% endblock %}
-
 {% block content %}
 <div class="card w-75 mx-auto" style="color: black; margin-top: 3%">
     <div class="container w-100" style="padding:0;">
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-12" id="profile">
-                <img src="{{ user.profile.profile_pic.url }}" alt="profile picture" class="img-fluid rounded float-left" height="200" width="200">
+                {% load staticfiles %}
+                <img src="{% static 'default.png' %}" alt="profile picture" class="img-fluid rounded float-left" height="200" width="200">
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 align-self-center" id="profile">
                 <p style="font-size: 1.5rem;"><strong>{{ user.username }}</strong></p>
