@@ -65,6 +65,7 @@ $(document).ready(function() {
             if(event.data.messageType == "SETTING"){
                 console.log("settings received");
                 // mainly to set the resolution
+                //NEEDS DOING
             }
             else if(event.data.messageType == "SCORE"){
                 console.log("score received");
@@ -95,8 +96,15 @@ $(document).ready(function() {
                         console.log("success function triggered");
                         console.log(data);
                         //data is the jsonrespponse from the views
-                        var loadstate = JSON.parse(data);
-                        //send the loadstate to the iframe with messagetype as 'LOAD' 
+                        var loadstate = JSON.parse(data.state);
+                        var responsemessage = { 
+                            messageType: "LOAD",
+                            gameState: loadstate,
+                        };
+                        //The window object of the spawned iframe
+                        var targetwindow = event.source;
+                        //send the loadstate to the iframe with messagetype as 'LOAD'
+                        targetwindow.postMessage(responsemessage, source);
                     },
                 });
                 //request to load gamestate from service => respond with postmessage with message type as LOAD and data as the given data
