@@ -17,7 +17,32 @@
 </head>
 <h4 id="lib-header">Store</h4>
 <hr>
+
 <div class="container">
+    <form method="POST">
+       {% csrf_token %}
+       <input type="hidden" name="messagetype" value="filter">
+       {% for tag1, tag2 in tags %}
+           <input type="checkbox" name="{{ tag1 }}" value="{{ tag2 }}"> {{ tag2 }}
+        {% endfor %}
+       <input type="submit" name="filter" value="filter">
+    </form>
+</div>
+<div class="container">
+    <form method="POST">
+       {% csrf_token %}
+        <input type="hidden" name="messagetype" value="search">
+       <input type="text" name="search">
+       <input type="submit" name=submit value="search">
+    </form>
+</div>
+{% if flag == 1 %}
+    <div class="container">
+        <p>Game With That Name Not Found</p>
+    </div>
+{% endif %}
+<div class="container">
+<hr>
     <div class="row">
         {% for game in allgames %}
             <div class="col-lg-4 col-md-6 col-sm-12" id="store">
@@ -35,6 +60,7 @@
                     {% if user.is_authenticated and not user.is_dev %}
                     <form method="POST" name="add_to_cart">
                         {% csrf_token %}
+                        <input type="hidden" name="messagetype" value="cart">
                         <input type="hidden" name="id" value="{{ game.id }}" />
                         <input class="btn btn-success btn-sm" type="submit" value="Add to cart">
                     </form>

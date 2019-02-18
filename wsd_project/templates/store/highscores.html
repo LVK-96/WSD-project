@@ -14,11 +14,13 @@
         </thead>
         <tbody>
         {% for onescore in bestscores %}
+            {% for player in onescore.player_name %}
             <tr style="background-image: radial-gradient(rgb(100, 100, 100), rgb(135, 135, 135)); color: white;">
                 <td scope="col">{{ onescore.game_name }}</td>
-                <td scope="col"> {{ onescore.player_name }}</td>
+                <td scope="col"> {{ player }}</td>
                 <td scope="col">{{ onescore.max_score }} </td>
             </tr>
+            {% endfor %}
         {% endfor %}
         </tbody>
     </table>
