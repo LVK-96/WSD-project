@@ -8,6 +8,7 @@ from .forms import NewGameForm, GameUpdateForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Order, Highscore, Game
+from users.models import CustomUser
 from django.conf import settings
 from django.db.models.aggregates import Max
 import json
@@ -37,12 +38,18 @@ def store(request):
 
 def highscores(request):
     largesthighscore = Highscore.objects.values('game').annotate(max_score=Max('score'))
-    #iterate through for a check
-    print(largesthighscore.all())
-    for entry in largesthighscore:
-        print(entry['game'])
-        print(entry['max_score'])
-    return render(request, 'store/highscores.html')
+
+    context = []
+
+    for item in largesthighscore:
+        game_name = Game.objects.all().get(pk = item["game"]).name
+        user_object = Highscore.objects.get(game = item["game"], score = item["max_score"]).player
+        user_name = user_object.username
+        context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_name })
+    
+    myhighscores = Highscore.objects.filter(player_id=request.user.pk)
+
+    return render(request, 'store/highscores.html', {'bestscores': context, 'myhighscores': myhighscores})
 
 @active_user_required
 def my_library(request):
