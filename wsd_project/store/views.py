@@ -199,7 +199,7 @@ def confirm_payment(request):
             games_and_prices = dict(zip(games, prices))
             order.games_and_prices = order.encodeJSON(games_and_prices)
             order.save()
-            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
+            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'sid':settings.SID, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden()
 
     return redirect('index')

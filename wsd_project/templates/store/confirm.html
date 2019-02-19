@@ -4,7 +4,7 @@
 <hr>
     <form action="http://payments.webcourse.niksula.hut.fi/pay/" method="POST">
         <input type="hidden" name="pid" value="{{ cart_id }}" />
-        <input type="hidden" name="sid" value="wsd18store" />
+        <input type="hidden" name="sid" value="{{ sid }}" />
         <input type="hidden" name="success_url"
                 value="{{ PAYMENT_SUCCESS_URL }}" />
         <input type="hidden" name="cancel_url"
