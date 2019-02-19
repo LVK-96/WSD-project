@@ -4,40 +4,43 @@ window.onload=function() {
     document.addEventListener("keydown",keyPush);
     setInterval(game,1000/10);
 }
-score = 0;
-px=py=10;
-mapsize=20;
-ax=ay=15;
-xv=yv=0;
-trail=[];
-tail = 1;
-speed = 10;
-is_paused = false;
+var score = 0;
+var px=10;
+var py=px;
+var mapsize=20;
+var ax=15;
+var ay=ax;
+var xv=0;
+var yv=xv;
+var trail=[];
+var tail = 1;
+var speed = 10;
+var is_paused = false;
 
 function game() {
     $("#restart").click( function () {
         location.reload();
     });
 
-    $("#submit_score").click( function () {
-        is_paused = True;
+    $("#submit").click( function () {
+        is_paused = true;
         var msg = {
           "messageType": "SCORE",
           "score": parseFloat($("#score").text())
         };
         window.parent.postMessage(msg, "*");
-        is_paused = False;
+        is_paused = false;
       });
 
     $("#save").click( function () {
         var msg = {
           "messageType": "SAVE",
           "gameState": {
-            "px": parseFloat($("#py").text()),
-            "py": parseFloat($("#px").text()),
-            "tail": parseFloat($("#tail").text()),
-            "trail": toString(trail),
-            "score": parseFloat($("#score").text())
+            "px": px,
+            "py": py,
+            "tail": tail.split(" "),
+            "trail": trail.join(" "),
+            "score": score
           }
         };
         window.parent.postMessage(msg, "*");
@@ -53,12 +56,12 @@ function game() {
       window.addEventListener("message", function(evt) {
         if(evt.data.messageType === "LOAD") {
           py = evt.data.gameState.py;
-          py = evt.data.gameState.px;
+          px = evt.data.gameState.px;
           tail = evt.data.gameState.tail;
-          trail = str.split(evt.data.gameState.trail);
+          trail = evt.data.gameState.trail
           points = evt.data.gameState.score;
           $("#score").text(points);
-          updateItems();
+          //updateItems();
         } else if (evt.data.messageType === "ERROR") {
           alert(evt.data.info);
         }
