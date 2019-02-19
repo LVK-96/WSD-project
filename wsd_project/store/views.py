@@ -24,7 +24,7 @@ def index(request):
 
 def store(request):
     allgames = Game.objects.all()
-    tags = Game.objects.all().first().GENRE_CHOISES
+    tags = Game.GENRE_CHOISES
     flag = 0
 
     if request.method == 'POST':
@@ -53,8 +53,6 @@ def store(request):
                 #to tell the template that game with that name was not found
                 flag = 1
             
-                
-
     return render(request, 'store/store.html', {'allgames': allgames, 'tags': tags, 'flag': flag})
 
 def highscores(request):
