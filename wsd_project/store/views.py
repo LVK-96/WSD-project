@@ -60,7 +60,7 @@ def highscores(request):
         if "game" in request.GET:
             game_name = request.GET.get("game")
             game = Game.objects.get(name=game_name)
-            highscores = Highscore.objects.filter(game=game)
+            highscores = Highscore.objects.filter(game=game).order_by("score")
             return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
     return render(request, 'store/highscores.html')
 
