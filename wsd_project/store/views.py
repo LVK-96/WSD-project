@@ -315,7 +315,7 @@ def game_description(request, game_pk):
     if request.method == 'GET':
         try:
             game = Game.objects.get(pk=game_pk)
-            tophighscores = Highscore.objects.filter(game = game)
+            tophighscores = Highscore.objects.filter(game = game).order_by("-score")
             tophighscores.order_by('score')
             tophighscores = tophighscores[:10]
             return render(request, 'store/gamedescription.html', {'game' : game, 'tophighscores': tophighscores})
