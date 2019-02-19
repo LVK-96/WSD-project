@@ -61,9 +61,12 @@ def highscores(request):
     if request.method == 'GET':
         if "game" in request.GET:
             game_name = request.GET.get("game")
-            game = Game.objects.get(name=game_name)
-            highscores = Highscore.objects.filter(game=game)
-            return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
+            if Game.objects.filter(name=game_name):
+                game = Game.objects.get(name=game_name)
+                highscores = Highscore.objects.filter(game=game)
+                return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
+            else:
+                return render(request, 'store/highscores.html')
     return render(request, 'store/highscores.html')
 
 @active_user_required
