@@ -77,7 +77,7 @@ def profilepage(request):
         p_form = ProfileUpdateForm(instance=request.user.profile)
         
     context = {
-        'user': request.user
+        'user': request.user,
         'u_form': u_form,
         'p_form': p_form,
         'highscores': myhighscores
