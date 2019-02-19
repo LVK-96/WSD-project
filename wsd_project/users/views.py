@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login, authenticate
 from django.urls import reverse_lazy
 from django.views import generic
+from store.models import Highscore
 from .models import CustomUser
 from .forms import SignupForm, ChangeForm, ProfileUpdateForm
 from django.core.mail import send_mail
@@ -59,6 +60,11 @@ def activate(request, uidb64, token):
 
 @active_user_required
 def profilepage(request):
+    if Highscore.objects.filter(player_id=request.user.pk):
+        myhighscores = Highscore.objects.filter(player_id=request.user.pk)
+    else:
+        myhighscores = None
+
     if request.method == 'POST':
         u_form = ChangeForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
@@ -73,6 +79,7 @@ def profilepage(request):
     context = {
         'u_form': u_form,
         'p_form': p_form,
+        'highscores': myhighscores
     }
     
     return render(request, 'users/profile.html', context)

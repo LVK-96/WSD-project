@@ -12,4 +12,4 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    bio = models.CharField(default='', max_length=500)
+    bio = models.CharField(default='', max_length=500, blank=True)

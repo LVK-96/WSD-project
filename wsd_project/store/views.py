@@ -11,7 +11,6 @@ from .models import Order, Highscore, Game
 from users.models import CustomUser
 from django.conf import settings
 from django.db.models.aggregates import Max
-import json
 #from django.utils.decorators import method_decorator
 
 user_login_required = user_passes_test(lambda user: user.is_active, login_url='/')
@@ -59,21 +58,13 @@ def store(request):
     return render(request, 'store/store.html', {'allgames': allgames, 'tags': tags, 'flag': flag})
 
 def highscores(request):
-    largesthighscore = Highscore.objects.values('game').annotate(max_score=Max('score'))
-
-    context = []
-
-    for item in largesthighscore:
-        game_name = Game.objects.all().get(pk = item["game"]).name
-        user_queryset = Highscore.objects.filter(game = item["game"], score = item["max_score"])
-        user_names = []
-        for user_object in user_queryset:
-            user_names.append(user_object.player.username)
-        context.append({'game_pk': item["game"], 'game_name': game_name, 'max_score': item["max_score"], 'player_name': user_names })
-    
-    myhighscores = Highscore.objects.filter(player_id=request.user.pk)
-
-    return render(request, 'store/highscores.html', {'bestscores': context, 'myhighscores': myhighscores})
+    if request.method == 'GET':
+        if "game" in request.GET:
+            game_name = request.GET.get("game")
+            game = Game.objects.get(name=game_name)
+            highscores = Highscore.objects.filter(game=game)
+            return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
+    return render(request, 'store/highscores.html')
 
 @active_user_required
 def my_library(request):
@@ -176,7 +167,7 @@ def cart(request):
         prices.append(game.price)
     games_and_prices = zip(games, prices)
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
@@ -191,7 +182,7 @@ def confirm_payment(request):
         game = Game.objects.get(pk=game_id)
         total += game.price
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, "wsd18store", total, "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
     if request.method == 'GET':
