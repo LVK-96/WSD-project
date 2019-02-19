@@ -163,7 +163,7 @@ USE_TZ = True
 EMAIL_HOST = 'smtp.sendgrid.net'
 
 if os.getenv('EMAIL_HOST_USER'):
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USERNAME') 
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER') 
 else:
     EMAIL_HOST_USER = 'emailuser:D'
 
