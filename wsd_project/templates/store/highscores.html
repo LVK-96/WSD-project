@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
+<h4 id="lib-header">Highscores</h4>
+<hr>
+<div class="container" style="margin-bottom:20px;">
     <form method="GET">
        {% csrf_token %}
         <input type="hidden" name="messagetype" value="search">
        <input type="text" name="game">
-       <input type="submit" name=submit value="search">
+       <input class="btn btn-outline-light btn-sm" type="submit" name=submit value="Search">
     </form>
 </div>
 {% if flag == 1 %}
@@ -14,8 +16,6 @@
     </div>
 {% endif %}
 
-<h4 id="lib-header">Highscores</h4>
-<hr>
     {% if game %}
     <h5>Highscores for {{ game.name }}</h5>
     {% endif %}

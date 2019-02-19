@@ -8,6 +8,7 @@
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">Price</th>
+                <th scope="col">Remove</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +22,7 @@
                         <input type="hidden" name="game_id" value= "{{ game.id }}" >
                         <input class="btn btn-outline-light" type="submit" value="Remove from cart"/>
                     </form>
-                </td> 
+                </td>
             </tr>
         {% endfor %}
         </tbody>
