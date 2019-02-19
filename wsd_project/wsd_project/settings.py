@@ -140,12 +140,12 @@ AUTHENTICATION_BACKENDS = (
 if os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY'):
     SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 else:
-    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='538988683043-6v2g2t3c1bpd039rn6vv4fvbr3hh8oe2.apps.googleusercontent.com'  #Paste CLient Key
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='glientgey:D'  #Paste CLient Key
 
 if os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET'):
     SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 else:
-    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'ojJRE1pmjr5SBY9D_il90tKI' #Paste Secret Key
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'segred:D' #Paste Secret Key
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
@@ -165,12 +165,12 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 if os.getenv('EMAIL_HOST_USER'):
     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USERNAME') 
 else:
-    EMAIL_HOST_USER = 'app119607950@heroku.com'
+    EMAIL_HOST_USER = 'emailuser:D'
 
 if os.getenv('EMAIL_HOST_PASSWORD'):
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 else:
-    EMAIL_HOST_PASSWORD = 'oaepgzhz4672'
+    EMAIL_HOST_PASSWORD = 'bassword:D'
 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
