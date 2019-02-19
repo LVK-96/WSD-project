@@ -207,7 +207,7 @@ def confirm_payment(request):
 @active_user_required
 def payment_success(request):
     # calculate checksum
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "success"):
         # delete cart from session
@@ -231,7 +231,7 @@ def payment_success(request):
 
 @active_user_required
 def payment_cancel(request):
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "cancel"):
         user_cart = request.session['cart']
@@ -247,7 +247,7 @@ def payment_cancel(request):
 
 @active_user_required
 def payment_error(request):
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "error"):
         user_cart = request.session['cart']
