@@ -60,16 +60,13 @@ Estimated Points: 40
 The game is added to the players inventory by adding a row to the highscore table. this might have not been the best idea in hindsight since updating highscores are done in multiple places and this might open up more opportunities for an attacker to expoit mechanics. For example if the attacker is able to spoof the POST message origin header in a way that the message appears to come from the correct origin. However everywhere where a highscore is updated it is checked that the user already has an entry in the highscore table which would mean that the user would already own the game. 
 
 
+# Overall Comments
+Overall our group was successful in our project. Nobody from our group had much experience of web developement beforehand and therefore solving some problems took us quite a bit of time. In adition due to inexperience our knoweledge about good software architecture was limited and we had to do some aspects of our project through trial and error. In general our group learned alot about web architecture, security and databases as well as throughout this project we learned a quite abit about the django framework. We were successful in implementing all the features we wanted on the web page, but certain functionalities were left quite shallow compared to many real web pages, for example the search functionality on our web page is quite limited.  
 
- Where do you feel that you %%%%%%%were successful and where you had most problems.%%%%%%%%%%%% Give sufficient details, this will influence the non-functional points awarded.
-%%%%%%How did you divide the work between the team members - who did what?%%%%%%
-
+ 
 
 ## instructions for using the application
 # Heroku
 https://wsd18-store.herokuapp.com/
 
-Instructions how to use your application and link to Heroku where it is deployed.
-If a specific account/password (e.g. game developer) is required to try out and test some aspects of the work, please provide the details.
-
-if you use https the example game will not work due to it being ---
+The example game that was given does not work when using https
