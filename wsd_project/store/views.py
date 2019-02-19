@@ -165,7 +165,7 @@ def cart(request):
         prices.append(game.price)
     games_and_prices = zip(games, prices)
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.SID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
@@ -180,7 +180,7 @@ def confirm_payment(request):
         game = Game.objects.get(pk=game_id)
         total += game.price
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.SID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
     if request.method == 'GET':

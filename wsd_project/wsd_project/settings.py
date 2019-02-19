@@ -34,10 +34,10 @@ if os.getenv('PAYMENT_TOKEN'):
 else:
     PAYMENT_TOKEN = "ad730b6cf25ef42d9cc48e2fbfa28a31"
 
-if os.getenv('PID'):
-    PID = os.getenv('PID')
+if os.getenv('SID'):
+    SID = os.getenv('SID')
 else:
-    PID = "wsd18store"
+    SID = "wsd18store"
 
 if os.getenv('PAYMENT_SUCCESS_URL'):
     PAYMENT_SUCCESS_URL = os.getenv('PAYMENT_SUCCESS_URL')
