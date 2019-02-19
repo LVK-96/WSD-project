@@ -24,7 +24,7 @@ def index(request):
 
 def store(request):
     allgames = Game.objects.all()
-    tags = Game.objects.all().first().GENRE_CHOISES
+    tags = Game.GENRE_CHOISES
     flag = 0
 
     if request.method == 'POST':
@@ -53,20 +53,15 @@ def store(request):
                 #to tell the template that game with that name was not found
                 flag = 1
             
-                
-
     return render(request, 'store/store.html', {'allgames': allgames, 'tags': tags, 'flag': flag})
 
 def highscores(request):
     if request.method == 'GET':
         if "game" in request.GET:
             game_name = request.GET.get("game")
-            if Game.objects.filter(name=game_name):
-                game = Game.objects.get(name=game_name)
-                highscores = Highscore.objects.filter(game=game)
-                return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
-            else:
-                return render(request, 'store/highscores.html')
+            game = Game.objects.get(name=game_name)
+            highscores = Highscore.objects.filter(game=game).order_by("-score")
+            return render(request, 'store/highscores.html', {'highscores': highscores, 'game': game})
     return render(request, 'store/highscores.html')
 
 @active_user_required
@@ -114,7 +109,7 @@ def order_history(request, game_pk):
         prices = []
         for order in orders:
             for game_name, price in order.decodeJSON(order.games_and_prices).items():
-                if (game_name == check_game.name):
+                if (game_name == check_game.name and order.status == order.SUCCESFULL_PAYMENT):
                     dates.append(order.date)
                     prices.append(price)
         dates_and_prices = zip(dates, prices)
@@ -170,7 +165,7 @@ def cart(request):
         prices.append(game.price)
     games_and_prices = zip(games, prices)
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.SID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     return render(request, 'store/cart.html', {'checksum': checksum, 'total': total, 'games_and_prices': games_and_prices, 'empty_flag': empty_flag})
 
@@ -185,7 +180,7 @@ def confirm_payment(request):
         game = Game.objects.get(pk=game_id)
         total += game.price
 
-    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.PID, total, settings.PAYMENT_TOKEN)
+    checksumstr = "pid={}&sid={}&amount={}&token={}".format(request.session.session_key, settings.SID, total, settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
 
     if request.method == 'GET':
@@ -204,7 +199,7 @@ def confirm_payment(request):
             games_and_prices = dict(zip(games, prices))
             order.games_and_prices = order.encodeJSON(games_and_prices)
             order.save()
-            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
+            return render(request, 'store/confirm.html', {'checksum': checksum, 'total': total, 'sid':settings.SID, 'cart_id': request.session.session_key, 'PAYMENT_SUCCESS_URL': settings.PAYMENT_SUCCESS_URL, 'PAYMENT_CANCEL_URL': settings.PAYMENT_CANCEL_URL, 'PAYMENT_ERROR_URL': settings.PAYMENT_ERROR_URL})
         return HttpResponseForbidden()
 
     return redirect('index')
@@ -212,7 +207,7 @@ def confirm_payment(request):
 @active_user_required
 def payment_success(request):
     # calculate checksum
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "success"):
         # delete cart from session
@@ -236,7 +231,7 @@ def payment_success(request):
 
 @active_user_required
 def payment_cancel(request):
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "cancel"):
         user_cart = request.session['cart']
@@ -252,7 +247,7 @@ def payment_cancel(request):
 
 @active_user_required
 def payment_error(request):
-    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), "ad730b6cf25ef42d9cc48e2fbfa28a31")
+    checksumstr = "pid={}&ref={}&result={}&token={}".format(request.session.session_key, request.GET.get("ref"), request.GET.get("result"), settings.PAYMENT_TOKEN)
     checksum = md5(checksumstr.encode("ascii")).hexdigest()
     if (checksum == request.GET.get("checksum") and request.GET.get("result") == "error"):
         user_cart = request.session['cart']
@@ -320,7 +315,7 @@ def game_description(request, game_pk):
     if request.method == 'GET':
         try:
             game = Game.objects.get(pk=game_pk)
-            tophighscores = Highscore.objects.filter(game = game)
+            tophighscores = Highscore.objects.filter(game = game).order_by("-score")
             tophighscores.order_by('score')
             tophighscores = tophighscores[:10]
             return render(request, 'store/gamedescription.html', {'game' : game, 'tophighscores': tophighscores})

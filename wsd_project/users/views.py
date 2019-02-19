@@ -84,5 +84,3 @@ def profilepage(request):
     }
     
     return render(request, 'users/profile.html', context)
-
-    

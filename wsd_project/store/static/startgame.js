@@ -31,7 +31,7 @@ $.ajaxSetup({
 });
 
 function replacestatic(baseurl){
-    var localstring = "http://127.0.0.1:8000/";
+    var localstring = "http://wsd18-store.herokuapp.com/";
     var endstring = baseurl.substring(8);
     return localstring.concat(endstring);
 }
