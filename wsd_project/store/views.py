@@ -109,7 +109,7 @@ def order_history(request, game_pk):
         prices = []
         for order in orders:
             for game_name, price in order.decodeJSON(order.games_and_prices).items():
-                if (game_name == check_game.name):
+                if (game_name == check_game.name and order.status == order.SUCCESFULL_PAYMENT):
                     dates.append(order.date)
                     prices.append(price)
         dates_and_prices = zip(dates, prices)
