@@ -23,12 +23,12 @@ def RESTapi(request):
             return render(request, 'api/REST.html', {'jsonString': " "})
 
         if username != None and game_name != None:
-            if CustomUser.objects.get(username=username):
+            if CustomUser.objects.filter(username=username):
                 user = CustomUser.objects.get(username=username)
             else:
                 return render(request, 'api/REST.html', {'jsonString': " "})
             
-            if Game.objects.get(name=game_name):
+            if Game.objects.filter(name=game_name):
                 game = Game.objects.get(name=game_name)
             else:
                 return render(request, 'api/REST.html', {'jsonString': " "})
@@ -39,7 +39,7 @@ def RESTapi(request):
                 return render(request, 'api/REST.html', {'jsonString': score_JSON})
 
         if game_name == None:
-            if CustomUser.objects.get(username=username):
+            if CustomUser.objects.filter(username=username):
                 user = CustomUser.objects.get(username=username)
             else:
                 return render(request, 'api/REST.html', {'jsonString': " "})
@@ -55,7 +55,7 @@ def RESTapi(request):
                 return render(request, 'api/REST.html', {'jsonString': games_and_scores_JSON})
 
         if username == None:
-            if Game.objects.get(name=game_name):
+            if Game.objects.filter(name=game_name):
                 game = Game.objects.get(name=game_name)
             else:
                 return render(request, 'api/REST.html', {'jsonString': " "})
