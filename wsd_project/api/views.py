@@ -2,6 +2,7 @@ from django.shortcuts import render
 from store.models import Highscore, Game
 from users.models import CustomUser
 from django.template import loader
+from django.http import JsonResponse
 import json
 # Create your views here.
 def RESTapi(request):
@@ -20,29 +21,29 @@ def RESTapi(request):
         print(game_name) 
 
         if username == None and game_name == None:
-            return render(request, 'api/REST.html', {'jsonString': " "})
+            return JsonResponse({})
 
         if username != None and game_name != None:
             if CustomUser.objects.filter(username=username):
                 user = CustomUser.objects.get(username=username)
             else:
-                return render(request, 'api/REST.html', {'jsonString': " "})
+                return JsonResponse({})
             
             if Game.objects.filter(name=game_name):
                 game = Game.objects.get(name=game_name)
             else:
-                return render(request, 'api/REST.html', {'jsonString': " "})
+                return JsonResponse({})
 
             if Highscore.objects.get(game=game, player=user):
                 highscore = Highscore.objects.get(game=game, player=user)
-                score_JSON = json.dumps(highscore.score)
-                return render(request, 'api/REST.html', {'jsonString': score_JSON})
+                ret = {username: highscore.score}
+                return JsonResponse(ret)
 
         if game_name == None:
             if CustomUser.objects.filter(username=username):
                 user = CustomUser.objects.get(username=username)
             else:
-                return render(request, 'api/REST.html', {'jsonString': " "})
+                return JsonResponse({})
             
             if Highscore.objects.filter(player=user):
                 games = []
@@ -51,14 +52,13 @@ def RESTapi(request):
                     games.append(highscore.game.name)
                     scores.append(highscore.score)
                 games_and_scores = dict(zip(games, scores))
-                games_and_scores_JSON = json.dumps(games_and_scores) 
-                return render(request, 'api/REST.html', {'jsonString': games_and_scores_JSON})
+                return JsonResponse(games_and_scores)
 
         if username == None:
             if Game.objects.filter(name=game_name):
                 game = Game.objects.get(name=game_name)
             else:
-                return render(request, 'api/REST.html', {'jsonString': " "})
+                return JsonResponse({})
             
             if Highscore.objects.filter(game=game):
                 users = []
@@ -67,7 +67,6 @@ def RESTapi(request):
                     users.append(highscore.player.username)
                     scores.append(highscore.score)
                 users_and_scores = dict(zip(users, scores))
-                users_and_scores_JSON = json.dumps(users_and_scores)
-                return render(request, 'api/REST.html', {'jsonString': users_and_scores_JSON})
+                return JsonResponse(users_and_scores)
     
-    return render(request, 'api/REST.html', {'jsonString': " "})
+    return JsonResponse({})
