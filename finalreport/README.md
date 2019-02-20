@@ -48,9 +48,10 @@ Estimated Points: 100
 A RESTul API was implemented. The restful API gives information in the json format. A GET request can be made to the API to retrieve highscores and parameters can be given to the get request to specify which users or games (or both) highscores you want to retireve.
 
 Example usecases:
-https://wsd18-store.herokuapp.com/api?username=leo.kiviku&game=Snek
-https://wsd18-store.herokuapp.com/api?username=leo.kiviku
-https://wsd18-store.herokuapp.com/api?game=Snek
+..* https://wsd18-store.herokuapp.com/api?username=leo.kiviku&game=Snek
+..* https://wsd18-store.herokuapp.com/api?username=leo.kiviku
+..* https://wsd18-store.herokuapp.com/api?game=Snek
+
 Estimated Points: 100
 
 # Own Game
