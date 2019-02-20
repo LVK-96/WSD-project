@@ -16,19 +16,34 @@ def RESTapi(request):
         else:
             game_name = None
 
+        print(username)
+        print(game_name) 
+
         if username == None and game_name == None:
             return render(request, 'api/REST.html', {'jsonString': " "})
 
         if username != None and game_name != None:
-            user = CustomUser.objects.get(username=username)
-            game = Game.objects.get(name=game_name)
+            if CustomUser.objects.get(username=username):
+                user = CustomUser.objects.get(username=username)
+            else:
+                return render(request, 'api/REST.html', {'jsonString': " "})
+            
+            if Game.objects.get(name=game_name):
+                game = Game.objects.get(name=game_name)
+            else:
+                return render(request, 'api/REST.html', {'jsonString': " "})
+
             if Highscore.objects.get(game=game, player=user):
-                score_JSON = json.dumps(highscore.score)
                 highscore = Highscore.objects.get(game=game, player=user)
+                score_JSON = json.dumps(highscore.score)
                 return render(request, 'api/REST.html', {'jsonString': score_JSON})
 
         if game_name == None:
-            user = CustomUser.objects.get(username=username)
+            if CustomUser.objects.get(username=username):
+                user = CustomUser.objects.get(username=username)
+            else:
+                return render(request, 'api/REST.html', {'jsonString': " "})
+            
             if Highscore.objects.filter(player=user):
                 games = []
                 scores = []
@@ -40,7 +55,11 @@ def RESTapi(request):
                 return render(request, 'api/REST.html', {'jsonString': games_and_scores_JSON})
 
         if username == None:
-            game = Game.objects.get(name=game_name)
+            if Game.objects.get(name=game_name):
+                game = Game.objects.get(name=game_name)
+            else:
+                return render(request, 'api/REST.html', {'jsonString': " "})
+            
             if Highscore.objects.filter(game=game):
                 users = []
                 scores = []
